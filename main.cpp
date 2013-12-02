@@ -1,6 +1,6 @@
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
+//#include "SDL/SDL.h"
+//#include "SDL/SDL_image.h"
 #include <iostream> //C++ I/O
 #include <GL/glut.h> 
 
@@ -35,7 +35,7 @@ void updateMouse(int x, int y);
 void display();
 void reshape(int, int);
 void keyboard(unsigned char key, int x, int y);
-void special(int key, int x, int y);
+void specialKeys(int key, int x, int y);
 void init();
 void printInstructions();
 void setView();
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(special);
+	glutSpecialFunc(specialKeys);
 
 	init();
 
@@ -125,6 +125,7 @@ void drawLights()
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
 }
 
+/*
 void loadTexture(GLuint texture_obj, string tFileName) {
 SDL_Surface *g_image_surface = NULL; 
 const char *fileName = tFileName.c_str();
@@ -138,7 +139,7 @@ glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 glTexImage2D(GL_TEXTURE_2D, 0, g_image_surface->format->BytesPerPixel,g_image_surface->w, g_image_surface->h,0,GL_RGB,GL_UNSIGNED_BYTE,g_image_surface->pixels);
 SDL_FreeSurface(g_image_surface);
 }
-
+*/
 
 
 void init()
@@ -159,7 +160,7 @@ void init()
 	glFogf(GL_FOG_END, 15.0 );
 
 	glEnable(GL_TEXTURE_2D);
-	loadTexture(texture,"Texture.jpg");
+	//loadTexture(texture,"Texture.jpg");
 	
 
 	printInstructions();
@@ -255,7 +256,7 @@ void keyboard(unsigned char key, int x, int y)
 }
 
 
-void special(int key, int x, int y)
+void specialKeys(int key, int x, int y)
 {
 	int factor = -1;
 	if((sin(camYaw * PI/360.0) > -.90) && (sin(camYaw * PI/360.0) < .45))
@@ -373,46 +374,62 @@ void drawAxes()
 
 void drawCube()
 {
-	 glBindTexture(GL_TEXTURE_2D, texture);
+	 //glBindTexture(GL_TEXTURE_2D, texture);
 	glColor4f(1.0, 1.0, 0.0, 0.0);
 	glBegin(GL_QUADS);
 	
-		glTexCoord2f(1, 1); glVertex3f(0.0, 0.0, 0.0);
-		glTexCoord2f(1, 0); glVertex3f(0.0, 1.0, 0.0);
-		glTexCoord2f(0, 0); glVertex3f(1.0, 1.0, 0.0);
-		glTexCoord2f(0, 1); glVertex3f(1.0, 0.0, 0.0);
-		
-		glTexCoord2f(1, 1); glVertex3f(0.0, 0.0, 0.0);
-		glTexCoord2f(1, 0); glVertex3f(0.0, 0.0, 1.0);
-		glTexCoord2f(0, 0); glVertex3f(0.0, 1.0, 1.0);
-		glTexCoord2f(0, 1); glVertex3f(0.0, 1.0, 0.0);
-		
-		glTexCoord2f(1, 1); glVertex3f(0.0, 0.0, 0.0);
-		glTexCoord2f(1, 0); glVertex3f(1.0, 0.0, 0.0);
-		glTexCoord2f(0, 0); glVertex3f(1.0, 0.0, 1.0);
-		glTexCoord2f(0, 1); glVertex3f(0.0, 0.0, 1.0);
-		
-		glTexCoord2f(1, 1); glVertex3f(0.0, 0.0, 1.0);
-		glTexCoord2f(1, 0); glVertex3f(0.0, 1.0, 1.0);
-		glTexCoord2f(0, 0); glVertex3f(1.0, 1.0, 1.0);
-		glTexCoord2f(0, 1); glVertex3f(1.0, 0.0, 1.0);
-		
-		glTexCoord2f(1, 1);
-		glVertex3f(1.0, 0.0, 0.0);
-		glTexCoord2f(1, 0);
+		//glTexCoord2f(1, 1); 
+		glVertex3f(0.0, 0.0, 0.0);
+		//glTexCoord2f(1, 0);
+		glVertex3f(0.0, 1.0, 0.0);
+		//glTexCoord2f(0, 0); 
 		glVertex3f(1.0, 1.0, 0.0);
-		glTexCoord2f(0, 0);
+		//glTexCoord2f(0, 1); 
+		glVertex3f(1.0, 0.0, 0.0);
+		
+		//glTexCoord2f(1, 1); 
+		glVertex3f(0.0, 0.0, 0.0);
+		//glTexCoord2f(1, 0);
+		glVertex3f(0.0, 0.0, 1.0);
+		//glTexCoord2f(0, 0);
+		glVertex3f(0.0, 1.0, 1.0);
+		//glTexCoord2f(0, 1); 
+		glVertex3f(0.0, 1.0, 0.0);
+		
+		//glTexCoord2f(1, 1);
+		glVertex3f(0.0, 0.0, 0.0);
+		//glTexCoord2f(1, 0); 
+		glVertex3f(1.0, 0.0, 0.0);
+		//glTexCoord2f(0, 0);
+		glVertex3f(1.0, 0.0, 1.0);
+		//glTexCoord2f(0, 1);
+		glVertex3f(0.0, 0.0, 1.0);
+		
+		//glTexCoord2f(1, 1);
+		glVertex3f(0.0, 0.0, 1.0);
+		//glTexCoord2f(1, 0);
+		glVertex3f(0.0, 1.0, 1.0);
+		//glTexCoord2f(0, 0);
 		glVertex3f(1.0, 1.0, 1.0);
-		glTexCoord2f(0, 1);
+		//glTexCoord2f(0, 1);
 		glVertex3f(1.0, 0.0, 1.0);
 		
-		glTexCoord2f(1, 1);
-		glVertex3f(0.0, 1.0, 0.0);
-		glTexCoord2f(1, 0);
-		glVertex3f(0.0, 1.0, 1.0);
-		glTexCoord2f(0, 0);
+		//glTexCoord2f(1, 1);
+		glVertex3f(1.0, 0.0, 0.0);
+		//glTexCoord2f(1, 0);
+		glVertex3f(1.0, 1.0, 0.0);
+		//glTexCoord2f(0, 0);
 		glVertex3f(1.0, 1.0, 1.0);
-		glTexCoord2f(0, 1);
+		//glTexCoord2f(0, 1);
+		glVertex3f(1.0, 0.0, 1.0);
+		
+		//glTexCoord2f(1, 1);
+		glVertex3f(0.0, 1.0, 0.0);
+		//glTexCoord2f(1, 0);
+		glVertex3f(0.0, 1.0, 1.0);
+		//glTexCoord2f(0, 0);
+		glVertex3f(1.0, 1.0, 1.0);
+		//glTexCoord2f(0, 1);
 		glVertex3f(1.0, 1.0, 0.0);
 		
 	glEnd();
