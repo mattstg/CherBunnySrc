@@ -1,14 +1,17 @@
 
 #include "SDL/SDL.h"
+#undef main
 #include "SDL/SDL_image.h"
 #include <iostream> //C++ I/O
-#include <GL/glut.h> 
-
+#include <vector>
+#include <GL/glut.h>
+#include <cstdlib>
+#include "glm.h"
+#include "Model.h"
 using namespace std;
 
 //	Constants
-
-const float PI = 3.14159265358979323;
+#define PI 3.1415265359
 const int ESC = 27;
 
 const float zoomFactor = pow(2, 0.1);
@@ -16,7 +19,6 @@ const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
 
 //	Globals
-
 int screenWidth = 640;
 int screenHeight = 480;
 
@@ -27,21 +29,36 @@ float camPitch = 30.0;
 float camCenterX = 0.0;
 float camCenterY = 0.0;
 float camCenterZ = 0.0;
-//	Function prototypes
+
 
 bool lightOn = true;
+int landSize = 40;
 
-void updateMouse(int x, int y);
+//Model 
+vector<Model> models;
+int MaxRabbit = 2;
+int MaxTree = 2;
+int MaxBush = 2;
+int MaxCarrot = 2;
+
+
+//Model functions
+void loadModels();
+void drawModels();
+
+//	Function prototypes
+void init();
 void display();
+void setView();
 void reshape(int, int);
+void updateMouse(int x, int y);
+void mouseClick(int button, int state, int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
-void init();
 void printInstructions();
-void setView();
 void drawAxes();
 void drawCube();
-void mouseClick(int button, int state, int x, int y);
+void drawFloor(int size);
 
 GLuint texture = NULL;
 
@@ -95,7 +112,7 @@ void updateMouse(int x, int y)
 		//glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
 		//then need to redraw
 	
-	cout << sin(camYaw * PI/360.0) << endl << endl;
+	//cout << sin(camYaw * PI/360.0) << endl << endl;
 	//this method will calculate the percentage of the mouses location and translate it to 360 degrees. Example|
 	//Example: center of screen will be 0degrees while edges are 180
 	camYaw = -(360*(((double)x/screenWidth)-.5));
@@ -108,8 +125,6 @@ void updateMouse(int x, int y)
 	
 };
 
-
-
 void drawLights()
 {
 	
@@ -119,7 +134,7 @@ void drawLights()
 	GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
 	//GLfloat light_Kd[4] = {0.8, 0.8, 0.8, 1.0}; // diffuse light parameters
 	//GLfloat light_Ks[4] = {0.9, 0.2, 0.9, 1.0};    //specular light parameters
-		glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
 	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
@@ -151,25 +166,26 @@ void init()
 	glEnable(GL_COLOR_MATERIAL); //allow material to be effected by lighting
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
-
+/*
 	glEnable(GL_FOG);
 	GLfloat fogColor[4] = {.9, 0.9, 0.9, 1.0};
 	glFogi(GL_FOG_MODE, GL_LINEAR );
 	glFogfv(GL_FOG_COLOR, fogColor);
 	glFogf(GL_FOG_START, 10.0 );
 	glFogf(GL_FOG_END, 15.0 );
-
+*/
 	glEnable(GL_TEXTURE_2D);
 	//loadTexture(texture,"Texture.jpg");
-	
+	loadModels();
 
 	printInstructions();
 	return;
 }
 
+
 void printInstructions()
 {
-	cout << "Lecture 10 Demo 3: Controlling the Camera" << endl << endl;
+	cout << "Welcome to the Game!" << endl << endl;
 	
 	cout << "Press + to zoom in." << endl;
 	cout << "Press - to zoom out." << endl << endl;
@@ -181,6 +197,54 @@ void printInstructions()
 	return;
 }
 
+void loadModels(){
+
+	char * objects[4];
+	objects[0] = "objs/rabbit.obj";
+	objects[1] = "objs/bush.obj";
+	objects[2] = "objs/tree.obj";
+	objects[3] = "objs/carrot.obj";
+
+	//Load Rabbits
+	for(int i = 0; i < MaxRabbit; i++){
+		int x = (rand() % landSize) - landSize/2;
+		int z = (rand() % landSize) - landSize/2;
+		Model temp (objects[0], glm::vec4(x, 0.95f, z, 1.0));	
+		models.push_back(temp);
+	}
+
+		//Load Bushes
+	for(int i = 0; i < MaxBush; i++){
+		int x = (rand() % landSize) - landSize/2;
+		int z = (rand() % landSize) - landSize/2;
+		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
+		models.push_back(temp);
+	}
+
+		//Load Trees
+	for(int i = 0; i < MaxTree; i++){
+		int x = (rand() % landSize) - landSize/2;
+		int z = (rand() % landSize) - landSize/2;
+		float size = rand() % 10;
+		Model temp (objects[2], glm::vec4(x, size, z, 1.0), size);	
+		models.push_back(temp);
+	}
+
+		//Load Carrots
+	for(int i = 0; i < MaxCarrot; i++){
+		int x = (rand() % landSize) - landSize/2;
+		int z = (rand() % landSize) - landSize/2;
+		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
+		models.push_back(temp);
+	}
+}
+
+void drawModels(){
+	
+	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) {
+    it->Draw();
+ }
+}
 
 void display()
 {
@@ -189,11 +253,11 @@ void display()
 	glLoadIdentity();
 	setView();
 	drawLights();
-	//drawCube();
-
+	drawFloor(landSize);
+	drawModels();
 
 	
-
+/*  //drawCube();
 	//to draw array of cubes
 	for (int i = 0; i < 5; i++)
 	{
@@ -208,9 +272,7 @@ void display()
 		}
 		glPopMatrix();
 	}
-
-
-
+*/
 	glutSwapBuffers();
 	return;
 }
@@ -246,6 +308,7 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 
 		case ESC:
+			//unload();
 			exit(0);
 			break;
 		default:
@@ -325,6 +388,19 @@ void setView()
 	gluLookAt(camCenterX - camX, camCenterY - camY,camCenterZ - camZ, camCenterX, camCenterY, camCenterZ, 0.0, 1.0, 0.0);
 	return;
 }
+
+
+void drawFloor(int size){
+	glColor3f(0.1f, 0.9f, 0.1f);
+	glBegin(GL_QUADS);
+	glVertex3f(-size/2, 0, -size/2);
+	glVertex3f(-size/2, 0, size/2);
+	glVertex3f(size/2, 0, size/2);
+	glVertex3f(size/2, 0, -size/2);
+	glEnd();
+	return;
+}
+
 
 
 void drawAxes()
