@@ -1,0 +1,62 @@
+# Blender MTL File: 'None'
+# Material Count: 5
+newmtl Rinde_Leaf_blatt1_a.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.379608 0.373333 0.379608
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tree1_3ds\blatt1_a.jpg
+map_d tree1_3ds\\blatt1_a.jpg
+
+
+newmtl Rinde_Level1_bark_loo.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.197647 0.181961 0.181961
+Ks 0.001961 0.001961 0.001961
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tree1_3ds\bark_loo.jpg
+map_Bump tree1_3ds\\bark_loo.jpg
+
+
+newmtl Rinde_Level2_bark_loo.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.197647 0.181961 0.181961
+Ks 0.001961 0.001961 0.001961
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tree1_3ds\bark_loo.jpg
+map_Bump tree1_3ds\\bark_loo.jpg
+
+
+newmtl Rinde_Level3_bark_loo.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.197647 0.181961 0.181961
+Ks 0.001961 0.001961 0.001961
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tree1_3ds\bark_loo.jpg
+map_Bump tree1_3ds\\bark_loo.jpg
+
+
+newmtl Rinde_bark_loo.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.197647 0.181961 0.181961
+Ks 0.001961 0.001961 0.001961
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tree1_3ds\bark_loo.jpg
+map_Bump tree1_3ds\\bark_loo.jpg
+
+
