@@ -1,6 +1,5 @@
 
 #include "SDL/SDL.h"
-#undef main
 #include "SDL/SDL_image.h"
 #include <iostream> //C++ I/O
 #include <vector>
@@ -8,6 +7,7 @@
 #include <cstdlib>
 #include "glm.h"
 #include "Model.h"
+#include "Skybox.h"
 using namespace std;
 
 //	Constants
@@ -41,6 +41,20 @@ int MaxTree = 2;
 int MaxBush = 2;
 int MaxCarrot = 2;
 
+//Skybox
+GLuint sbfront;
+GLuint sbright;
+GLuint sbleft;
+GLuint sbback;
+GLuint sbup;
+GLuint sbdown;
+
+#define SKY_FRONT 0
+#define SKY_RIGHT 1
+#define SKY_LEFT 2
+#define SKY_BACK 3
+#define SKY_UP 4
+#define SKY_DOWN 5
 
 //Model functions
 void loadModels();
@@ -59,6 +73,7 @@ void printInstructions();
 void drawAxes();
 void drawCube();
 void drawFloor(int size);
+void loadTexture(GLuint texture_obj, string tFileName);
 
 GLuint texture = NULL;
 
@@ -140,12 +155,12 @@ void drawLights()
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
 }
 
-/*
+
 void loadTexture(GLuint texture_obj, string tFileName) {
 SDL_Surface *g_image_surface = NULL; 
 const char *fileName = tFileName.c_str();
 g_image_surface = IMG_Load(fileName);
-glBindTexture(GL_TEXTURE_2D,texture_obj);
+glBindTexture(GL_TEXTURE_2D, texture_obj);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
@@ -154,9 +169,89 @@ glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 glTexImage2D(GL_TEXTURE_2D, 0, g_image_surface->format->BytesPerPixel,g_image_surface->w, g_image_surface->h,0,GL_RGB,GL_UNSIGNED_BYTE,g_image_surface->pixels);
 SDL_FreeSurface(g_image_surface);
 }
+
+void initSkybox(void)
+{
+/*
+SKY_FRONT 0
+SKY_RIGHT 1
+SKY_LEFT 2
+SKY_BACK 3
+SKY_UP 4
+SKY_DOWN 5
 */
 
+loadTexture(sbfront, "textures/txStormydays_front.bmp");
+loadTexture(sbright, "textures/txStormydays_right.bmp");
+loadTexture(sbleft, "textures/txStormydays_left.bmp");
+loadTexture(sbback, "textures/txStormydays_back.bmp");
+loadTexture(sbdown, "textures/txStormydays_down.bmp");
+loadTexture(sbup, "textures/txStormydays_up.bmp");
 
+
+//skybox[SKY_FRONT] = SDL_LoadBMP("textures/txStormydays_front.bmp");
+//skybox[SKY_RIGHT] = loadTexBMP("textures/txStormydays_right.bmp");
+//skybox[SKY_LEFT] = loadTexBMP("textures/txStormydays_left.bmp");
+//skybox[SKY_BACK] = loadTexBMP("textures/txStormydays_back.bmp");
+//skybox[SKY_UP] = loadTexBMP("textures/txStormydays_up.bmp");
+//skybox[SKY_DOWN] = loadTexBMP("textures/txStormydays_down.bmp");
+
+}
+
+void drawSkybox(double D)
+{
+//glColor3fv(white);
+glEnable(GL_TEXTURE_2D);
+ 
+/* Sides */
+glBindTexture(GL_TEXTURE_2D,sbright);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0); glVertex3f(-D,0,-D);
+glTexCoord2f(1,0); glVertex3f(+D,0,-D);
+glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
+glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
+glEnd();
+glBindTexture(GL_TEXTURE_2D,sbfront);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0); glVertex3f(+D,0,-D);
+glTexCoord2f(1,0); glVertex3f(+D,0,+D);
+glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
+glEnd();
+glBindTexture(GL_TEXTURE_2D,sbleft);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0); glVertex3f(+D,0,+D);
+glTexCoord2f(1,0); glVertex3f(-D,0,+D);
+glTexCoord2f(1,1); glVertex3f(-D,+D,+D);
+glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
+glEnd();
+glBindTexture(GL_TEXTURE_2D,sbback);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0); glVertex3f(-D,0,+D);
+glTexCoord2f(1,0); glVertex3f(-D,0,-D);
+glTexCoord2f(1,1); glVertex3f(-D,+D,-D);
+glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+glEnd();
+ 
+/* Top and Bottom */
+glBindTexture(GL_TEXTURE_2D,sbup);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
+glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
+glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+glEnd();
+/*
+glBindTexture(GL_TEXTURE_2D,sbdown);
+glBegin(GL_QUADS);
+glTexCoord2f(1,1); glVertex3f(+D,0,-D);
+glTexCoord2f(0,1); glVertex3f(-D,0,-D);
+glTexCoord2f(0,0); glVertex3f(-D,0,+D);
+glTexCoord2f(1,0); glVertex3f(+D,0,+D);
+glEnd();
+*/
+glDisable(GL_TEXTURE_2D);
+}
 void init()
 {
 	glClearColor(0.8, 0.8, 0.8, 0.0);
@@ -176,6 +271,7 @@ void init()
 */
 	glEnable(GL_TEXTURE_2D);
 	//loadTexture(texture,"Texture.jpg");
+	initSkybox();
 	loadModels();
 
 	printInstructions();
@@ -253,6 +349,7 @@ void display()
 	glLoadIdentity();
 	setView();
 	drawLights();
+	drawSkybox(landSize/2);
 	drawFloor(landSize);
 	drawModels();
 
