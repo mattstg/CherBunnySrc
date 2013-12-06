@@ -7,12 +7,14 @@
 #include <cstdlib>
 #include "glm.h"
 #include "Model.h"
+#include "Consts.h"
 #include "Skybox.h"
 using namespace std;
 
 //	Constants
 #define PI 3.1415265359
 const int ESC = 27;
+static const float CAM_MOVE = .1f;
 
 const float zoomFactor = pow(2, 0.1);
 const float yawIncr = 2.0;
@@ -29,6 +31,15 @@ float camPitch = 30.0;
 float camCenterX = 0.0;
 float camCenterY = 0.0;
 float camCenterZ = 0.0;
+
+
+
+//Camera
+Vect3 camPos;
+Vect3 camLA;
+float camRAD;
+float HAng;
+float VAng;
 
 
 bool lightOn = true;
@@ -71,6 +82,7 @@ void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
 void printInstructions();
 void drawAxes();
+void calcCam();
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
@@ -254,6 +266,21 @@ glDisable(GL_TEXTURE_2D);
 }
 void init()
 {
+	//Cam
+	camPos.x = 0;
+	camPos.y = 5;
+	camPos.z = 0;
+
+
+	camLA.x = 5;
+	camLA.y = 5;
+	camLA.z = 0;
+	
+	camRAD = 5;
+	HAng = 0;
+	VAng = 0;
+
+
 	//glClearColor(0.8, 0.8, 0.8, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -432,29 +459,23 @@ void specialKeys(int key, int x, int y)
 				//	factor = 1;
 
 				
-				camCenterX += factor*(1 - abs(sin(camYaw * PI/180.0)));
-				camCenterZ += factor*(1 * abs(sin(camYaw * PI/180.0)));
-				break;
+			HAng -= CAM_MOVE;
+			break;
 
 		case GLUT_KEY_RIGHT:
-				camCenterX -= factor*(1 - abs(sin(camYaw * PI/180.0)));
-				camCenterZ -= factor*(1 * abs(sin(camYaw * PI/180.0)));
+			HAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_DOWN:
-
-
-			camCenterY -=  1 * abs(cos(camPitch * PI/360.0));
-			camCenterZ -=  1 - abs(cos(camPitch * PI/360.0));
+			VAng -= CAM_MOVE;
 			break;
 		case GLUT_KEY_UP:
-			camCenterY +=  1 * abs(cos(camPitch * PI/360.0));
-			camCenterZ +=  1 - abs(cos(camPitch * PI/360.0));
+			VAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camCenterZ++;
+			camPos.x++;
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camCenterZ--;
+			camPos.y++;
 			break;
 		default:
 			break;
@@ -467,10 +488,21 @@ void specialKeys(int key, int x, int y)
 
 
 	}
+
+	calcCam(); 
 	glutPostRedisplay();
 	return;
 }
 
+
+void calcCam()  //sets camera LA and POS from Ang
+{
+	camLA.x = camRAD * cos(HAng);
+	camLA.z = camRAD * sin(HAng);
+	camLA.y = camRAD * sin(VAng);
+	cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
+
+}
 
 void setView()
 {
@@ -482,7 +514,7 @@ void setView()
 	float camZ = camDist * cos(yawAngleRad) * cos(pitchAngleRad);
 	float camY = camDist * sin(pitchAngleRad);
 	//cout << "CamX = " << camX/camDist << endl << "CamY = " << camY/camDist << endl << "CamZ" << camZ/camDist << endl;
-	gluLookAt(camCenterX - camX, camCenterY - camY,camCenterZ - camZ, camCenterX, camCenterY, camCenterZ, 0.0, 1.0, 0.0);
+	gluLookAt(camPos.x, camPos.y,camPos.z, camLA.x, camLA.y, camLA.z, 0.0, 1.0, 0.0);
 	return;
 }
 
