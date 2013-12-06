@@ -146,12 +146,12 @@ void drawLights()
 	
     
 	//Add point source light
-	GLfloat light_Pos[4] = {5.0, 5.0, -10.0, 1.0};   // Positioned at (5.0, 5.0, -10.0)
-	GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
+	//GLfloat light_Pos[4] = {5.0, 5.0, -10.0, 1.0};   // Positioned at (5.0, 5.0, -10.0)
+	//GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
 	//GLfloat light_Kd[4] = {0.8, 0.8, 0.8, 1.0}; // diffuse light parameters
 	//GLfloat light_Ks[4] = {0.9, 0.2, 0.9, 1.0};    //specular light parameters
-	glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
+	//glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
+ //   glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
 	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
 }
@@ -181,12 +181,12 @@ SKY_UP 4
 SKY_DOWN 5
 */
 
-loadTexture(sbfront, "CherBunnySrc/textures/txStormydays_front.bmp");
-loadTexture(sbright, "CherBunnySrc/textures/txStormydays_right.bmp");
-loadTexture(sbleft, "CherBunnySrc/textures/txStormydays_left.bmp");
-loadTexture(sbback, "CherBunnySrc/textures/txStormydays_back.bmp");
-loadTexture(sbdown, "CherBunnySrc/textures/txStormydays_down.bmp");
-loadTexture(sbup, "CherBunnySrc/textures/txStormydays_up.bmp");
+loadTexture(sbfront, "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbright, "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbleft, "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbback, "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbdown, "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbup, "CherBunnySrc/textures/night_sky.jpg");
 
 
 //skybox[SKY_FRONT] = SDL_LoadBMP("textures/txStormydays_front.bmp");
@@ -254,21 +254,21 @@ glDisable(GL_TEXTURE_2D);
 }
 void init()
 {
-	glClearColor(0.8, 0.8, 0.8, 0.0);
+	//glClearColor(0.8, 0.8, 0.8, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL); //allow material to be effected by lighting
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
-/*
-	glEnable(GL_FOG);
-	GLfloat fogColor[4] = {.9, 0.9, 0.9, 1.0};
-	glFogi(GL_FOG_MODE, GL_LINEAR );
-	glFogfv(GL_FOG_COLOR, fogColor);
-	glFogf(GL_FOG_START, 10.0 );
-	glFogf(GL_FOG_END, 15.0 );
-*/
+
+	//glEnable(GL_FOG);
+	//GLfloat fogColor[4] = {.9, 0.9, 0.9, 1.0};
+	//glFogi(GL_FOG_MODE, GL_LINEAR );
+	//glFogfv(GL_FOG_COLOR, fogColor);
+	//glFogf(GL_FOG_START,35.0 );
+	//glFogf(GL_FOG_END, 40.0 );
+
 	glEnable(GL_TEXTURE_2D);
 	//loadTexture(texture,"Texture.jpg");
 	initSkybox();
@@ -349,8 +349,8 @@ void display()
 	glLoadIdentity();
 	setView();
 	drawLights();
-	drawSkybox(landSize/2);
-	drawFloor(landSize);
+	//drawFloor(landSize);
+	drawSkybox(landSize/2);	
 	drawModels();
 
 	
