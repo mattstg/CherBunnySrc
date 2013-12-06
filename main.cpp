@@ -73,12 +73,13 @@ void printInstructions();
 void drawAxes();
 void drawCube();
 void drawFloor(int size);
-void loadTexture(GLuint texture_obj, string tFileName);
+void loadTexture(GLuint texture_obj, const char *tFileName);
 
 GLuint texture = NULL;
 
 int main(int argc, char* argv[])
 {
+	 SDL_Init(SDL_INIT_EVERYTHING); 
 	screenHeight = 480;
 	screenWidth = 640;
 	glutInit(&argc, argv);
@@ -156,10 +157,9 @@ void drawLights()
 }
 
 
-void loadTexture(GLuint texture_obj, string tFileName) {
-SDL_Surface *g_image_surface = NULL; 
-const char *fileName = tFileName.c_str();
-g_image_surface = IMG_Load(fileName);
+void loadTexture(GLuint texture_obj, const char *tFileName) {
+SDL_Surface *g_image_surface = NULL;
+g_image_surface = IMG_Load(tFileName);
 glBindTexture(GL_TEXTURE_2D, texture_obj);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
@@ -181,12 +181,12 @@ SKY_UP 4
 SKY_DOWN 5
 */
 
-loadTexture(sbfront, "textures/txStormydays_front.bmp");
-loadTexture(sbright, "textures/txStormydays_right.bmp");
-loadTexture(sbleft, "textures/txStormydays_left.bmp");
-loadTexture(sbback, "textures/txStormydays_back.bmp");
-loadTexture(sbdown, "textures/txStormydays_down.bmp");
-loadTexture(sbup, "textures/txStormydays_up.bmp");
+loadTexture(sbfront, "CherBunnySrc/textures/txStormydays_front.bmp");
+loadTexture(sbright, "CherBunnySrc/textures/txStormydays_right.bmp");
+loadTexture(sbleft, "CherBunnySrc/textures/txStormydays_left.bmp");
+loadTexture(sbback, "CherBunnySrc/textures/txStormydays_back.bmp");
+loadTexture(sbdown, "CherBunnySrc/textures/txStormydays_down.bmp");
+loadTexture(sbup, "CherBunnySrc/textures/txStormydays_up.bmp");
 
 
 //skybox[SKY_FRONT] = SDL_LoadBMP("textures/txStormydays_front.bmp");
@@ -241,7 +241,7 @@ glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
 glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
 glEnd();
-/*
+
 glBindTexture(GL_TEXTURE_2D,sbdown);
 glBegin(GL_QUADS);
 glTexCoord2f(1,1); glVertex3f(+D,0,-D);
@@ -249,7 +249,7 @@ glTexCoord2f(0,1); glVertex3f(-D,0,-D);
 glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
 glEnd();
-*/
+
 glDisable(GL_TEXTURE_2D);
 }
 void init()
@@ -296,10 +296,10 @@ void printInstructions()
 void loadModels(){
 
 	char * objects[4];
-	objects[0] = "objs/rabbit.obj";
-	objects[1] = "objs/bush.obj";
-	objects[2] = "objs/tree.obj";
-	objects[3] = "objs/carrot.obj";
+	objects[0] = "CherBunnySrc/objs/rabbit.obj";
+	objects[1] = "CherBunnySrc/objs/bush.obj";
+	objects[2] = "CherBunnySrc/objs/tree.obj";
+	objects[3] = "CherBunnySrc/objs/carrot.obj";
 
 	//Load Rabbits
 	for(int i = 0; i < MaxRabbit; i++){
