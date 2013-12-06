@@ -7,22 +7,20 @@
 #include <cstdlib>
 #include "glm.h"
 #include "Model.h"
-#include "Consts.h"
 #include "Skybox.h"
 using namespace std;
 
 //	Constants
 #define PI 3.1415265359
 const int ESC = 27;
-static const float CAM_MOVE = .1f;
 
 const float zoomFactor = pow(2, 0.1);
 const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
 
 //	Globals
-int screenWidth = 640;
-int screenHeight = 480;
+int screenWidth = 800;
+int screenHeight = 600;
 
 float camDist = 15.0;
 float camYaw = 30.0;
@@ -31,15 +29,6 @@ float camPitch = 30.0;
 float camCenterX = 0.0;
 float camCenterY = 0.0;
 float camCenterZ = 0.0;
-
-
-
-//Camera
-Vect3 camPos;
-Vect3 camLA;
-float camRAD;
-float HAng;
-float VAng;
 
 
 bool lightOn = true;
@@ -53,12 +42,6 @@ int MaxBush = 2;
 int MaxCarrot = 2;
 
 //Skybox
-GLuint sbfront;
-GLuint sbright;
-GLuint sbleft;
-GLuint sbback;
-GLuint sbup;
-GLuint sbdown;
 GLuint sbTextureId[6]; 
 
 #define SKY_FRONT 0
@@ -83,7 +66,6 @@ void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
 void printInstructions();
 void drawAxes();
-void calcCam();
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
@@ -185,51 +167,34 @@ SDL_FreeSurface(g_image_surface);
 
 void initSkybox(void)
 {
-/*
-SKY_FRONT 0
-SKY_RIGHT 1
-SKY_LEFT 2
-SKY_BACK 3
-SKY_UP 4
-SKY_DOWN 5
-*/
-glGenTextures(2,sbTextureId);
-loadTexture(sbTextureId[0], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[1], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[2], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[3], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[4], "CherBunnySrc/textures/grass.jpg");
-loadTexture(sbTextureId[5], "CherBunnySrc/textures/night_sky.jpg");
+glGenTextures(6,sbTextureId);
+loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/night_sky.jpg");
 
+loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_DOWN], "CherBunnySrc/textures/grass.jpg");
 
-//skybox[SKY_FRONT] = SDL_LoadBMP("textures/txStormydays_front.bmp");
-//skybox[SKY_RIGHT] = loadTexBMP("textures/txStormydays_right.bmp");
-//skybox[SKY_LEFT] = loadTexBMP("textures/txStormydays_left.bmp");
-//skybox[SKY_BACK] = loadTexBMP("textures/txStormydays_back.bmp");
-//skybox[SKY_UP] = loadTexBMP("textures/txStormydays_up.bmp");
-//skybox[SKY_DOWN] = loadTexBMP("textures/txStormydays_down.bmp");
 
 }
 
 void drawSkybox(double D)
 {
-//glColor3fv(white);
+glPushMatrix(); 
 glEnable(GL_TEXTURE_2D);
  
 /* Sides */
 glBindTexture(GL_TEXTURE_2D,sbTextureId[0]);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,0,-D);
 glTexCoord2f(1,0); glVertex3f(+D,0,-D);
 glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
 glEnd();
+glPopMatrix(); 
 
 glBindTexture(GL_TEXTURE_2D,sbTextureId[1]);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(+D,0,-D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
@@ -238,8 +203,6 @@ glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
 glEnd();
 
 glBindTexture(GL_TEXTURE_2D,sbTextureId[2]);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(+D,0,+D);
 glTexCoord2f(1,0); glVertex3f(-D,0,+D);
@@ -248,8 +211,6 @@ glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
 glEnd();
 
 glBindTexture(GL_TEXTURE_2D,sbTextureId[3]);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(-D,0,-D);
@@ -258,8 +219,6 @@ glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
 glEnd();
 
 glBindTexture(GL_TEXTURE_2D,sbTextureId[4]);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
 glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
@@ -280,21 +239,6 @@ glDisable(GL_TEXTURE_2D);
 }
 void init()
 {
-	//Cam
-	camPos.x = 0;
-	camPos.y = 5;
-	camPos.z = 0;
-
-
-	camLA.x = 5;
-	camLA.y = 5;
-	camLA.z = 0;
-	
-	camRAD = 5;
-	HAng = 0;
-	VAng = 0;
-
-
 	//glClearColor(0.8, 0.8, 0.8, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -473,23 +417,29 @@ void specialKeys(int key, int x, int y)
 				//	factor = 1;
 
 				
-			HAng -= CAM_MOVE;
-			break;
+				camCenterX += factor*(1 - abs(sin(camYaw * PI/180.0)));
+				camCenterZ += factor*(1 * abs(sin(camYaw * PI/180.0)));
+				break;
 
 		case GLUT_KEY_RIGHT:
-			HAng += CAM_MOVE;
+				camCenterX -= factor*(1 - abs(sin(camYaw * PI/180.0)));
+				camCenterZ -= factor*(1 * abs(sin(camYaw * PI/180.0)));
 			break;
 		case GLUT_KEY_DOWN:
-			VAng -= CAM_MOVE;
+
+
+			camCenterY -=  1 * abs(cos(camPitch * PI/360.0));
+			camCenterZ -=  1 - abs(cos(camPitch * PI/360.0));
 			break;
 		case GLUT_KEY_UP:
-			VAng += CAM_MOVE;
+			camCenterY +=  1 * abs(cos(camPitch * PI/360.0));
+			camCenterZ +=  1 - abs(cos(camPitch * PI/360.0));
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camPos.x++;
+			camCenterZ++;
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camPos.y++;
+			camCenterZ--;
 			break;
 		default:
 			break;
@@ -502,21 +452,10 @@ void specialKeys(int key, int x, int y)
 
 
 	}
-
-	calcCam(); 
 	glutPostRedisplay();
 	return;
 }
 
-
-void calcCam()  //sets camera LA and POS from Ang
-{
-	camLA.x = camRAD * cos(HAng);
-	camLA.z = camRAD * sin(HAng);
-	camLA.y = camRAD * sin(VAng);
-	cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
-
-}
 
 void setView()
 {
@@ -528,7 +467,7 @@ void setView()
 	float camZ = camDist * cos(yawAngleRad) * cos(pitchAngleRad);
 	float camY = camDist * sin(pitchAngleRad);
 	//cout << "CamX = " << camX/camDist << endl << "CamY = " << camY/camDist << endl << "CamZ" << camZ/camDist << endl;
-	gluLookAt(camPos.x, camPos.y,camPos.z, camLA.x, camLA.y, camLA.z, 0.0, 1.0, 0.0);
+	gluLookAt(camCenterX - camX, camCenterY - camY,camCenterZ - camZ, camCenterX, camCenterY, camCenterZ, 0.0, 1.0, 0.0);
 	return;
 }
 
