@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "glm.h"
 #include "Model.h"
+#include "RabbitModel.h"
 #include "Skybox.h"
 using namespace std;
 
@@ -59,6 +60,9 @@ GLuint sbdown;
 //Model functions
 void loadModels();
 void drawModels();
+
+RabbitModel rabbit;
+bool hop;
 
 //	Function prototypes
 void init();
@@ -275,6 +279,7 @@ void init()
 	loadModels();
 
 	printInstructions();
+	hop = false;
 	return;
 }
 
@@ -300,6 +305,10 @@ void loadModels(){
 	objects[1] = "objs/bush.obj";
 	objects[2] = "objs/tree.obj";
 	objects[3] = "objs/carrot.obj";
+
+	RabbitModel tempr(objects[0], glm::vec4(5, 0.95f, 5, 1.0));
+	
+	rabbit = tempr;
 
 	//Load Rabbits
 	for(int i = 0; i < MaxRabbit; i++){
@@ -337,6 +346,8 @@ void loadModels(){
 
 void drawModels(){
 	
+	rabbit.Draw();
+
 	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) {
     it->Draw();
  }
@@ -352,6 +363,10 @@ void display()
 	drawSkybox(landSize/2);
 	drawFloor(landSize);
 	drawModels();
+
+	if(hop){
+		hop = rabbit.Hop();
+	}
 
 	
 /*  //drawCube();
@@ -455,6 +470,9 @@ void specialKeys(int key, int x, int y)
 			break;
 		case GLUT_KEY_PAGE_DOWN:
 			camCenterZ--;
+			break;
+		case GLUT_KEY_HOME:
+			hop = true;
 			break;
 		default:
 			break;
