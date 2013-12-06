@@ -8,6 +8,7 @@
 #include "glm.h"
 #include "Model.h"
 #include "Skybox.h"
+#include "Consts.h"
 using namespace std;
 
 //	Constants
@@ -17,6 +18,17 @@ const int ESC = 27;
 const float zoomFactor = pow(2, 0.1);
 const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
+static const float CAM_MOVE = .1f;
+static float MOUSE_SENSITIVITY = .01f;
+
+//Camera
+Vect3 camPos;
+Vect3 camLA;
+float camRAD;
+float HAng;
+float VAng;
+
+
 
 //	Globals
 int screenWidth = 800;
@@ -66,6 +78,7 @@ void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
 void printInstructions();
 void drawAxes();
+void calcCam();
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
@@ -115,21 +128,22 @@ void mouseClick(int button, int state, int x, int y)
 
 void updateMouse(int x, int y)
 {
-	//since calling glutWarpPointer will recall updateMouse into an inf loop, this method will not be used yet
-		//So center is at screenWidth/2 ScreenHeight/2, if mouse moves, needs to look up or down depending
 	
-		//camYaw += (x - screenWidth/2);  //move x by amount mouse moved
-		//camPitch +=	(y - screenHeight/2); //move y by amount mouse moved from center
-		//glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
-		//then need to redraw
+	if(x != screenWidth/2 && y != screenWidth/2) //to prevent the infinite loop call caused by glutWarpPointer
+	{
+     float Hdif = (x - screenWidth/2);  //move x by amount mouse moved
+	 float Vdif = (y - screenHeight/2); //move y by amount mouse moved from center
+	 
+	 HAng += Hdif * MOUSE_SENSITIVITY;
+	 VAng += Vdif * MOUSE_SENSITIVITY;
+
+	 glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
+	 calcCam(); //recalc the cam
+	 //then need to redraw
+	 glutPostRedisplay();
+	}
 	
-	//cout << sin(camYaw * PI/360.0) << endl << endl;
-	//this method will calculate the percentage of the mouses location and translate it to 360 degrees. Example|
-	//Example: center of screen will be 0degrees while edges are 180
-	camYaw = -(360*(((double)x/screenWidth)-.5));
-	camPitch = -(360*(((double)y/screenHeight)-.5));
-	//cout << camPitch << endl;
-	glutPostRedisplay();
+	
 	
 	return;
 
@@ -239,6 +253,22 @@ glDisable(GL_TEXTURE_2D);
 }
 void init()
 {
+
+		//Cam
+	camPos.x = 0;
+	camPos.y = 15;
+	camPos.z = 0;
+
+
+	//camLA.x = 5;
+	//camLA.y = 5;
+	//camLA.z = 0;
+	
+	camRAD = 5;
+	HAng = 2.3;
+	VAng = 1.7;
+	calcCam();// intz the camLA
+
 	//glClearColor(0.8, 0.8, 0.8, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -403,9 +433,7 @@ void keyboard(unsigned char key, int x, int y)
 
 void specialKeys(int key, int x, int y)
 {
-	int factor = -1;
-	if((sin(camYaw * PI/360.0) > -.90) && (sin(camYaw * PI/360.0) < .45))
-					factor = 1;
+	
 	switch (key)
 	{
 		
@@ -417,29 +445,25 @@ void specialKeys(int key, int x, int y)
 				//	factor = 1;
 
 				
-				camCenterX += factor*(1 - abs(sin(camYaw * PI/180.0)));
-				camCenterZ += factor*(1 * abs(sin(camYaw * PI/180.0)));
+				HAng -= CAM_MOVE;
 				break;
 
 		case GLUT_KEY_RIGHT:
-				camCenterX -= factor*(1 - abs(sin(camYaw * PI/180.0)));
-				camCenterZ -= factor*(1 * abs(sin(camYaw * PI/180.0)));
+				HAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_DOWN:
 
 
-			camCenterY -=  1 * abs(cos(camPitch * PI/360.0));
-			camCenterZ -=  1 - abs(cos(camPitch * PI/360.0));
+			VAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_UP:
-			camCenterY +=  1 * abs(cos(camPitch * PI/360.0));
-			camCenterZ +=  1 - abs(cos(camPitch * PI/360.0));
+			VAng -= CAM_MOVE;
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camCenterZ++;
+			camPos.x++;
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camCenterZ--;
+			camPos.y++;
 			break;
 		default:
 			break;
@@ -452,22 +476,28 @@ void specialKeys(int key, int x, int y)
 
 
 	}
+	calcCam(); 
 	glutPostRedisplay();
 	return;
 }
+
+void calcCam()  //sets camera LA and POS from Ang
+{
+	camLA.x = camRAD * cos(HAng);
+	camLA.z = camRAD * sin(HAng);
+	camLA.y = camRAD * sin(VAng);
+	//cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
+
+}
+
 
 
 void setView()
 {
 //	Establish the position and orientation of the camera
 
-	float yawAngleRad = camYaw * PI/180.0;
-	float pitchAngleRad = camPitch * PI/360.0;
-	float camX = camDist * sin(yawAngleRad) * cos(pitchAngleRad);
-	float camZ = camDist * cos(yawAngleRad) * cos(pitchAngleRad);
-	float camY = camDist * sin(pitchAngleRad);
-	//cout << "CamX = " << camX/camDist << endl << "CamY = " << camY/camDist << endl << "CamZ" << camZ/camDist << endl;
-	gluLookAt(camCenterX - camX, camCenterY - camY,camCenterZ - camZ, camCenterX, camCenterY, camCenterZ, 0.0, 1.0, 0.0);
+	//cout << HAng << " , " << VAng << endl;
+	gluLookAt(camPos.x, camPos.y,camPos.z, camLA.x + camPos.x, camLA.y + camPos.y, camLA.z + camPos.z, 0.0, 1.0, 0.0);
 	return;
 }
 
