@@ -46,7 +46,7 @@ float camCenterZ = 0.0;
 
 
 bool lightOn = true;
-int landSize = 100;
+int landSize = 40;
 
 //Model 
 vector<Model> models;
@@ -215,11 +215,12 @@ SDL_FreeSurface(g_image_surface);
 void initSkybox(void)
 {
 glGenTextures(6,sbTextureId);
-loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/txStormydays_front.bmp");
-loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/txStormydays_right.bmp");
-loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/txStormydays_left.bmp");
-loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/txStormydays_back.bmp");
-loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/txStormydays_up.bmp");
+loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/night_sky.jpg");
+
+loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/night_sky.jpg");
 loadTexture(sbTextureId[SKY_DOWN], "CherBunnySrc/textures/grass.jpg");
 
 
