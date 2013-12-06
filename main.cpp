@@ -189,11 +189,11 @@ void drawLights()
     
 	//Add point source light
 	//GLfloat light_Pos[4] = {5.0, 5.0, -10.0, 1.0};   // Positioned at (5.0, 5.0, -10.0)
-	//GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
+	GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
 	//GLfloat light_Kd[4] = {0.8, 0.8, 0.8, 1.0}; // diffuse light parameters
 	//GLfloat light_Ks[4] = {0.9, 0.2, 0.9, 1.0};    //specular light parameters
 	//glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
- //   glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
+ glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
 	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
 }
