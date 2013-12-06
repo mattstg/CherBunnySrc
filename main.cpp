@@ -59,6 +59,7 @@ GLuint sbleft;
 GLuint sbback;
 GLuint sbup;
 GLuint sbdown;
+GLuint sbTextureId[6]; 
 
 #define SKY_FRONT 0
 #define SKY_RIGHT 1
@@ -192,13 +193,13 @@ SKY_BACK 3
 SKY_UP 4
 SKY_DOWN 5
 */
-
-loadTexture(sbfront, "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbright, "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbleft, "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbback, "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbdown, "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbup, "CherBunnySrc/textures/night_sky.jpg");
+glGenTextures(2,sbTextureId);
+loadTexture(sbTextureId[0], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[1], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[2], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[3], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[4], "CherBunnySrc/textures/grass.jpg");
+loadTexture(sbTextureId[5], "CherBunnySrc/textures/night_sky.jpg");
 
 
 //skybox[SKY_FRONT] = SDL_LoadBMP("textures/txStormydays_front.bmp");
@@ -216,37 +217,49 @@ void drawSkybox(double D)
 glEnable(GL_TEXTURE_2D);
  
 /* Sides */
-glBindTexture(GL_TEXTURE_2D,sbright);
+glBindTexture(GL_TEXTURE_2D,sbTextureId[0]);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,0,-D);
 glTexCoord2f(1,0); glVertex3f(+D,0,-D);
 glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
 glEnd();
-glBindTexture(GL_TEXTURE_2D,sbfront);
+
+glBindTexture(GL_TEXTURE_2D,sbTextureId[1]);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(+D,0,-D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
 glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
 glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
 glEnd();
-glBindTexture(GL_TEXTURE_2D,sbleft);
+
+glBindTexture(GL_TEXTURE_2D,sbTextureId[2]);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(+D,0,+D);
 glTexCoord2f(1,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,1); glVertex3f(-D,+D,+D);
 glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
 glEnd();
-glBindTexture(GL_TEXTURE_2D,sbback);
+
+glBindTexture(GL_TEXTURE_2D,sbTextureId[3]);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(-D,0,-D);
 glTexCoord2f(1,1); glVertex3f(-D,+D,-D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
 glEnd();
- 
-/* Top and Bottom */
-glBindTexture(GL_TEXTURE_2D,sbup);
+
+glBindTexture(GL_TEXTURE_2D,sbTextureId[4]);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
 glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
@@ -254,15 +267,16 @@ glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
 glEnd();
 
-glBindTexture(GL_TEXTURE_2D,sbdown);
+glBindTexture(GL_TEXTURE_2D,sbTextureId[5]);
 glBegin(GL_QUADS);
 glTexCoord2f(1,1); glVertex3f(+D,0,-D);
 glTexCoord2f(0,1); glVertex3f(-D,0,-D);
 glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
 glEnd();
-
 glDisable(GL_TEXTURE_2D);
+
+
 }
 void init()
 {
