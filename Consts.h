@@ -6,8 +6,10 @@
 	float x; float y; float z;
 	};
 
+	enum MousePressed{ LEFT,RIGHT,NONE};
+	
 
-
+	
 
 
 #endif

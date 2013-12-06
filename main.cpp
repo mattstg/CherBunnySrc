@@ -20,6 +20,8 @@ const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
 static const float CAM_MOVE = .1f;
 static float MOUSE_SENSITIVITY = .01f;
+static float ZOOM_SPEED = 1;
+static MousePressed MOUSE_PRESSED = NONE;
 
 //Camera
 Vect3 camPos;
@@ -68,7 +70,9 @@ void loadModels();
 void drawModels();
 
 //	Function prototypes
+void Update(int value);
 void init();
+//void glutTimerFunc(unsigned int msecs, void (*func)(int value), int value);
 void display();
 void setView();
 void reshape(int, int);
@@ -115,16 +119,45 @@ void mouseClick(int button, int state, int x, int y)
 	if(state == GLUT_DOWN)
 	{
 		if(button ==  GLUT_LEFT_BUTTON)
-				camDist /= zoomFactor;
+		{			
+			MOUSE_PRESSED = LEFT;
+		}
 		else if(button == GLUT_RIGHT_BUTTON)		
-				camDist *= zoomFactor;
+		{			
+			MOUSE_PRESSED = RIGHT;
+		} 			
+	}else if (state == GLUT_UP)
+		MOUSE_PRESSED = NONE;
 		
-		glutPostRedisplay();	
-	}
 	return;
 
 };
 
+void MouseMoveUpdate()
+{
+	if(MOUSE_PRESSED != NONE) //A mouse key is pressed during update
+	{
+	int mod = 1; //move foward
+	if(MOUSE_PRESSED == RIGHT)  //right click is pressed
+		mod = -1; //move backwards instead
+	
+	camPos.x += ZOOM_SPEED * cos(HAng) * mod;
+	camPos.z += ZOOM_SPEED * sin(HAng) * mod;
+	camPos.y += ZOOM_SPEED * sin(VAng) * mod;
+	
+	}
+
+
+}
+
+void Update(int value)
+{
+	MouseMoveUpdate();
+
+
+	glutPostRedisplay();
+	glutTimerFunc(50, &Update, value);
+};
 
 void updateMouse(int x, int y)
 {
@@ -135,8 +168,8 @@ void updateMouse(int x, int y)
 	 float Vdif = (y - screenHeight/2); //move y by amount mouse moved from center
 	 
 	 HAng += Hdif * MOUSE_SENSITIVITY;
-	 VAng += Vdif * MOUSE_SENSITIVITY;
-
+	 VAng += Vdif * MOUSE_SENSITIVITY;  //WHY ARE YOU INVERSED I AM NOT AN AIRPLANE
+	 VAng *= -1;
 	 glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
 	 calcCam(); //recalc the cam
 	 //then need to redraw
@@ -290,6 +323,7 @@ void init()
 	loadModels();
 
 	printInstructions();
+	glutTimerFunc(6000, &Update, 0); //first time calls after some gap in time in order to allow some render time
 	return;
 }
 
@@ -460,10 +494,14 @@ void specialKeys(int key, int x, int y)
 			VAng -= CAM_MOVE;
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camPos.x++;
+			camPos.x += ZOOM_SPEED * cos(HAng);
+			camPos.z += ZOOM_SPEED * sin(HAng);
+			camPos.y += ZOOM_SPEED * sin(VAng);
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camPos.y++;
+			camPos.x -= ZOOM_SPEED * cos(HAng);
+			camPos.z -= ZOOM_SPEED * sin(HAng);
+			camPos.y -= ZOOM_SPEED * sin(VAng);
 			break;
 		default:
 			break;
