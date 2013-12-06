@@ -169,7 +169,7 @@ void updateMouse(int x, int y)
 	 
 	 HAng += Hdif * MOUSE_SENSITIVITY;
 	 VAng += Vdif * MOUSE_SENSITIVITY;  //WHY ARE YOU INVERSED I AM NOT AN AIRPLANE
-	 VAng *= -1;
+	 
 	 glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
 	 calcCam(); //recalc the cam
 	 //then need to redraw
