@@ -7,9 +7,9 @@ FloorMap::FloorMap()
 	textureGrass = 0;
 	floorMap = new Floor[FLOOR_GRID_ROWS*FLOOR_GRID_ROWS];  //includes 2D array
 	for(int i = 0; i < FLOOR_GRID_ROWS*FLOOR_GRID_ROWS; i++)
-	{
-		//Intz all the FloorStructs
-		floorMap[i].size = FLOOR_GRID_SIZE;
+	{		
+		floorMap[i].x = (i % FLOOR_GRID_ROWS);
+		floorMap[i].z = (i / FLOOR_GRID_ROWS);
 
 	}
 
@@ -34,7 +34,7 @@ void FloorMap::Draw()
 	for(int i = 0; i < FLOOR_GRID_ROWS*FLOOR_GRID_ROWS; i++)
 	{
 		glPushMatrix();
-		glTranslatef((i % FLOOR_GRID_ROWS)*FLOOR_GRID_SIZE, 0.0, (i / FLOOR_GRID_ROWS)*FLOOR_GRID_SIZE);	
+		glTranslatef(floorMap[i].x*FLOOR_GRID_SIZE, 0.0, floorMap[i].z*FLOOR_GRID_SIZE);	
 				
 		glBegin(GL_QUADS);						
 		glTexCoord2f(0,0); glVertex3f(0,0,0);

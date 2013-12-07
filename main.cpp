@@ -167,8 +167,8 @@ void MouseMoveUpdate()
 	camPos.z += ZOOM_SPEED * sin(HAng) * mod;
 	camPos.y += ZOOM_SPEED * sin(VAng) * mod;
 
-	cout << camPos.x << "  " << camPos.y << "  " << camPos.z << endl;
-	cout << HAng << "  " << VAng << endl;
+	//cout << camPos.x << "  " << camPos.y << "  " << camPos.z << endl;
+	//cout << HAng << "  " << VAng << endl;
 	
 	}
 
@@ -196,7 +196,7 @@ void UpdateFireworks(){
 	if(!fireworks.empty()){
 		vector<Firework>::iterator fid; 
 		for(fid = fireworks.begin(); fid != fireworks.end(); ++fid){
-			fid-> UpdateFirework(REFRESH_TIMER);
+			fid-> UpdateFirework();
 		}
 	}
 }

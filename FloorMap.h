@@ -7,10 +7,10 @@
 #include <vector>
 
 
-const int FLOOR_GRID_ROWS = 40;
+const int FLOOR_GRID_ROWS = 19;
 const int FLOOR_GRID_SIZE = 50; //LAND SIZE
 
-struct Floor{int size;};
+struct Floor{int x,z;};
 
 
 
