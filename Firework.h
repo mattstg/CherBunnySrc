@@ -14,7 +14,7 @@ private:
 	vector<Particle> _particles;  
 	GLfloat alpha; 
 	GLfloat color[3];
-
+public : 
 	Firework();
 	void DeleteFirework(); 	
 	void BuildFirework(float x, float y, float z);

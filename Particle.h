@@ -1,4 +1,3 @@
-#include <GL/GL.h>
 #include "Consts.h"
 
 class Particle{

@@ -21,13 +21,13 @@ void Firework::DeleteFirework(){
 }
 void Firework::UpdateFirework(const float &time){
 	vector<Particle>::iterator pId; 
-	for(pId = _particles.begin();pId != _particles.end(); pId++){
+	for(pId = _particles.begin();pId != _particles.end(); ++pId){
 		pId->Update(time);
 	}
 }
 
 void Firework::DrawFirework(){
-	glPointSize(4.f);
+	glPointSize(10.f);
 	glEnable(GL_POINT_SMOOTH);
 	glAlphaFunc(GL_GREATER,0.5f); 
     glEnable(GL_ALPHA_TEST); 
@@ -39,7 +39,7 @@ void Firework::DrawFirework(){
 
 	glColor3f(color[red],color[green],color[blue]); 
 	vector<Particle>::iterator pId; 
-	for(pId = _particles.begin();pId != _particles.end(); pId++){
+	for(pId = _particles.begin();pId != _particles.end(); ++pId){
 		Vect3 &pos = pId->position; 
 		glVertex3f(pos.x,pos.y,pos.z); 	
 	}
