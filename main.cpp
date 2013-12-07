@@ -14,6 +14,7 @@
 #include "Consts.h"
 #include "Bunny.h"
 #include "FloorMap.h"
+#include "Firework.h"
 #include <math.h>
 using namespace std;
 
@@ -61,6 +62,9 @@ int landSize = 900;
 vector<Model> models;
 vector<Bunny> bunnies;
 
+//fireworks 
+vector<Firework> fireworks; 
+
 int MaxRabbit = 10;
 int MaxTree = 2;
 int MaxBush = 2;
@@ -91,6 +95,7 @@ void init();
 //void glutTimerFunc(unsigned int msecs, void (*func)(int value), int value);
 void display();
 void UpdateBunnies();
+void UpdateFireworks(); 
 void setView();
 void reshape(int, int);
 void updateMouse(int x, int y);
@@ -101,9 +106,11 @@ void printInstructions();
 void drawAxes();
 void calcCam();
 void drawFloorMap();
+void DrawFireworks(); 
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
+
 
 GLuint texture = NULL;
 
@@ -188,6 +195,14 @@ void UpdateBunnies() //All logic updates for bunny should be done in here
 	
 }
 
+void UpdateFireworks(){
+	if(!fireworks.empty){
+		vector<Firework>::iterator fid; 
+		for(fid = fireworks.begin(); fid != fireworks.end; ++fid){
+			fid-> UpdateFirework(REFRESH_TIMER);
+		}
+	}
+}
 void updateMouse(int x, int y)
 {
 	if(!DISABLE_MOUSE)
@@ -323,6 +338,17 @@ glDisable(GL_TEXTURE_2D);
 glPopMatrix();
 
 }
+
+//Draw all fireworks 
+void DrawFireworks(){
+	if(!fireworks.empty){
+		vector<Firework>::iterator fid; 
+		for(fid = fireworks.begin(); fid != fireworks.end; ++fid){
+			fid-> DrawFirework();
+		}
+	}
+}
+
 void init()
 {
 	glutSetCursor(GLUT_CURSOR_NONE);
