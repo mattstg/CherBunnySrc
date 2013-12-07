@@ -13,6 +13,8 @@
 #include "Skybox.h"
 #include "Consts.h"
 #include "Bunny.h"
+#include "FloorMap.h"
+#include <math.h>
 using namespace std;
 
 //	Constants
@@ -53,7 +55,7 @@ float camCenterZ = 0.0;
 
 
 bool lightOn = true;
-int landSize = 100;
+int landSize = 900;
 
 //Model 
 vector<Model> models;
@@ -63,6 +65,11 @@ int MaxRabbit = 10;
 int MaxTree = 2;
 int MaxBush = 2;
 int MaxCarrot = 2;
+
+
+//Floor map
+FloorMap floorMap;
+
 
 //Skybox
 GLuint sbTextureId[6]; 
@@ -93,6 +100,7 @@ void specialKeys(int key, int x, int y);
 void printInstructions();
 void drawAxes();
 void calcCam();
+void drawFloorMap();
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
@@ -189,7 +197,7 @@ void updateMouse(int x, int y)
 	 float Vdif = (y - screenHeight/2); //move y by amount mouse moved from center
 	 
 	 HAng += Hdif * MOUSE_SENSITIVITY;
-	 VAng -= Vdif * MOUSE_SENSITIVITY;  //WHY ARE YOU INVERSED I AM NOT AN AIRPLANE
+	 VAng -= Vdif * MOUSE_SENSITIVITY;  
 	 
 	 glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
 	 calcCam(); //recalc the cam
@@ -220,7 +228,7 @@ void drawLights()
 }
 
 
-void loadTexture(GLuint texture_obj, const char *tFileName) {
+void static loadTexture(GLuint texture_obj, const char *tFileName) {
 SDL_Surface *g_image_surface = NULL;
 g_image_surface = IMG_Load(tFileName);
 glBindTexture(GL_TEXTURE_2D, texture_obj);
@@ -249,9 +257,19 @@ loadTexture(sbTextureId[SKY_DOWN], "CherBunnySrc/textures/grass.jpg");
 
 void drawSkybox(double D)
 {
-glPushMatrix(); 
+glPushMatrix();
+glTranslatef(camPos.x,0,camPos.z); //move the box to the camera
+glRotatef(HAng,0.0,1.0,0.0);
+
 glEnable(GL_TEXTURE_2D);
  
+
+//Move the box to follow the char
+
+
+
+
+
 /* Sides */
 glBindTexture(GL_TEXTURE_2D,sbTextureId[0]);
 glBegin(GL_QUADS);
@@ -260,7 +278,7 @@ glTexCoord2f(1,0); glVertex3f(+D,0,-D);
 glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
 glEnd();
-glPopMatrix(); 
+
 
 glBindTexture(GL_TEXTURE_2D,sbTextureId[1]);
 glBegin(GL_QUADS);
@@ -302,7 +320,7 @@ glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
 glEnd();
 glDisable(GL_TEXTURE_2D);
-
+glPopMatrix();
 
 }
 void init()
@@ -312,6 +330,11 @@ void init()
 	camPos.x = -44.547;
 	camPos.y = 5.24364;
 	camPos.z = 26.7551;
+
+	//load map
+	loadTexture(floorMap.getTextID(), "CherBunnySrc/textures/grass.jpg");
+
+
 
 
 	//camLA.x = 5;
@@ -325,9 +348,16 @@ void init()
 
 	//glClearColor(0.8, 0.8, 0.8, 0.0);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL); //allow material to be effected by lighting
+
+	//setup ambient test light
+	//GLfloat light_position[] = { landSize/2, landSize/2, landSize/2, 0.0 };
+	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
+	 
+	//glEnable(GL_COLOR_MATERIAL); //allow material to be effected by lighting
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
 
@@ -425,7 +455,7 @@ void display()
 	//drawFloor(landSize);
 	drawSkybox(landSize/2);	
 	drawModels();
-
+	//drawFloorMap();
 	
 /*  //drawCube();
 	//to draw array of cubes
@@ -445,6 +475,12 @@ void display()
 */
 	glutSwapBuffers();
 	return;
+}
+
+void drawFloorMap()
+{
+	floorMap.Draw();
+
 }
 
 void reshape(int w, int h)
@@ -558,6 +594,7 @@ void calcCam()  //sets camera LA and POS from Ang
 {
 	camLA.x = camRAD * cos(HAng);
 	camLA.z = camRAD * sin(HAng);
+	
 	camLA.y = camRAD * sin(VAng);
 	//cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
 

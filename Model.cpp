@@ -47,7 +47,7 @@ void Model::Update(){
 }
 
 void Model::Draw(){
-
+	
 	glPushMatrix();
 	GLfloat mat2_ambient[ ] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat mat2_diffuse[ ] = {0.5, 0.5, 0.5, 1.0};
