@@ -2,18 +2,20 @@
 #include <stdlib.h> 
 
 Particle::Particle(float x, float y, float z){
+	factor = 0.1f; 
 	position.x = x; 
 	position.y = y; 
 	position.z = z; 
 	acceleration.x = 0; 
-	acceleration.y =-9.8f; 
+	acceleration.y =-0.25f; 
 	acceleration.z = 0; 
-	velocity.x = -2 + (rand()/ (float)RAND_MAX)*4.0f; 
-	velocity.y = -4.0f + ((float)rand() /(float)RAND_MAX)*-4.0f; 
-	velocity.z = 0; 
+	velocity.x = (rand()%30)-5; 
+	velocity.y = (rand()%10)-5; 
+	velocity.z = (rand()%30)-5; 
 }
 void Particle::Update(const float &time){
-	position.x = (velocity.x*time + acceleration.x*time)*time; 
-	position.y = (velocity.y*time + acceleration.y*time)*time; 
-	position.z = (velocity.z*time + acceleration.z*time)*time;
+	position.x += velocity.x*factor; 
+	position.y += velocity.y*factor;
+	velocity.y += acceleration.y; 
+	position.z += velocity.z*factor; 
 }

@@ -10,7 +10,7 @@ using namespace glm;
 
 class Firework{
 public: 
-private: 
+public: 
 	vector<Particle> _particles;  
 	GLfloat alpha; 
 	GLfloat color[3];
@@ -20,5 +20,4 @@ public :
 	void BuildFirework(float x, float y, float z);
 	void UpdateFirework(const float &time); 
 	void DrawFirework(); 
-	void SetAplha(); 
 };
