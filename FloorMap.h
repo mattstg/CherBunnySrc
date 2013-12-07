@@ -1,21 +1,14 @@
 #ifndef FLOORMAP_H
 #define FLOORMAP_H
 
-
-#include "Consts.h"
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include <stdlib.h>     /* srand, rand */
+#include "Consts.h"  //has all glut include
 #include <time.h>
-
 #include <iostream> //C++ I/O
 #include <vector>
-#include <GL/glut.h>
-#include <cstdlib>
-#include "glm.h"
 
-const int FLOOR_GRID_ROWS = 3;
-const int FLOOR_GRID_SIZE = 900; //LAND SIZE
+
+const int FLOOR_GRID_ROWS = 40;
+const int FLOOR_GRID_SIZE = 50; //LAND SIZE
 
 struct Floor{int size;};
 
@@ -24,12 +17,13 @@ struct Floor{int size;};
 class FloorMap{
 	
 public:
+	
 	GLuint textureGrass;
 
 
 	Floor * floorMap;
 
-	GLuint getTextID();
+	void LoadTexture();
 	FloorMap();
 	void Draw();
 private:

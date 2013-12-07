@@ -1,17 +1,11 @@
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>
-
 #include <iostream> //C++ I/O
 #include <vector>
-#include <GL/glut.h>
-#include <cstdlib>
-#include "glm.h"
 #include "Model.h"
 #include "Skybox.h"
-#include "Consts.h"
+#include "Consts.h"  //all glut inc
 #include "Bunny.h"
 #include "FloorMap.h"
 #include "Firework.h"
@@ -28,7 +22,7 @@ const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
 static const float CAM_MOVE = .1f;
 static float MOUSE_SENSITIVITY = .01f;
-static float ZOOM_SPEED = 1;
+static float ZOOM_SPEED = 30;
 static MousePressed MOUSE_PRESSED = NONE;
 static float REFRESH_TIMER = 50; //the update func will be called every 50 ms
 static bool DISABLE_MOUSE = false;
@@ -132,6 +126,9 @@ int main(int argc, char* argv[])
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeys);
 
+	floorMap.LoadTexture();
+
+
 	init();
 	
 
@@ -196,9 +193,9 @@ void UpdateBunnies() //All logic updates for bunny should be done in here
 }
 
 void UpdateFireworks(){
-	if(!fireworks.empty){
+	if(!fireworks.empty()){
 		vector<Firework>::iterator fid; 
-		for(fid = fireworks.begin(); fid != fireworks.end; ++fid){
+		for(fid = fireworks.begin(); fid != fireworks.end(); ++fid){
 			fid-> UpdateFirework(REFRESH_TIMER);
 		}
 	}
@@ -259,13 +256,18 @@ SDL_FreeSurface(g_image_surface);
 void initSkybox(void)
 {
 glGenTextures(6,sbTextureId);
-loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night.jpg");
+
+G_LoadTexture(sbTextureId[SKY_FRONT],"CherBunnySrc/textures/night.jpg");
+//loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night.jpg");
 loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/night.jpg");
 
 loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/night.jpg");
 loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/night.jpg");
 loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/night.jpg");
+
 loadTexture(sbTextureId[SKY_DOWN], "CherBunnySrc/textures/grass.jpg");
+
+
 
 
 }
@@ -327,6 +329,7 @@ glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
 glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
 glEnd();
 
+/*
 glBindTexture(GL_TEXTURE_2D,sbTextureId[5]);
 glBegin(GL_QUADS);
 glTexCoord2f(1,1); glVertex3f(+D,0,-D);
@@ -334,6 +337,7 @@ glTexCoord2f(0,1); glVertex3f(-D,0,-D);
 glTexCoord2f(0,0); glVertex3f(-D,0,+D);
 glTexCoord2f(1,0); glVertex3f(+D,0,+D);
 glEnd();
+*/
 glDisable(GL_TEXTURE_2D);
 glPopMatrix();
 
@@ -341,9 +345,9 @@ glPopMatrix();
 
 //Draw all fireworks 
 void DrawFireworks(){
-	if(!fireworks.empty){
+	if(!fireworks.empty()){
 		vector<Firework>::iterator fid; 
-		for(fid = fireworks.begin(); fid != fireworks.end; ++fid){
+		for(fid = fireworks.begin(); fid != fireworks.end(); ++fid){
 			fid-> DrawFirework();
 		}
 	}
@@ -357,12 +361,7 @@ void init()
 	camPos.y = 5.24364;
 	camPos.z = 26.7551;
 
-	//load map
-	loadTexture(floorMap.getTextID(), "CherBunnySrc/textures/grass.jpg");
-
-
-
-
+	
 	//camLA.x = 5;
 	//camLA.y = 5;
 	//camLA.z = 0;
@@ -481,7 +480,7 @@ void display()
 	//drawFloor(landSize);
 	drawSkybox(landSize/2);	
 	drawModels();
-	//drawFloorMap();
+	drawFloorMap();
 	
 /*  //drawCube();
 	//to draw array of cubes
