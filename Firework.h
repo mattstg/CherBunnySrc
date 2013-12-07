@@ -14,8 +14,10 @@ public:
 	vector<Particle> _particles;  
 	GLfloat alpha; 
 	GLfloat color[3];
+	bool IsDead; 
 public : 
 	Firework();
+	~Firework(); 
 	void DeleteFirework(); 	
 	void BuildFirework(float x, float y, float z);
 	void UpdateFirework(const float &time); 

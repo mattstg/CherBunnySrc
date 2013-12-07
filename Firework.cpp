@@ -9,7 +9,13 @@ Firework::Firework(){
 	color[green] = (rand() / (float)RAND_MAX); 
 	color[blue] = (rand() / (float)RAND_MAX); 
 	alpha = 1.0f; 
+	IsDead = false; 
 }
+
+Firework::~Firework(){
+	DeleteFirework();  
+}
+
 void Firework::BuildFirework(float x, float y, float z){
 	for(int i = 0; i<100;i++){
 		Particle p = Particle(x,y,z);  
@@ -26,6 +32,10 @@ void Firework::UpdateFirework(const float &time){
 		pId->Update(time);
 	}
 	alpha -= 0.01; 
+	if(alpha<=0){	
+		IsDead = true; 
+	}
+	
 }
 void Firework::DrawFirework(){
 	glPointSize(3.0f);
