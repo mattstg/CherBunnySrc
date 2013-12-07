@@ -23,6 +23,8 @@ public:
 	Model(char *s);
 	Model(char *s, glm::vec4 loc);
 	Model(char *s, glm::vec4 loc, float scale);
+
+	void forceCnstr(char *s, glm::vec4 loc, float scale);
 	void Update();
 	void Draw();
 	void GenRotateMatrix();

@@ -1,6 +1,9 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>
+
 #include <iostream> //C++ I/O
 #include <vector>
 #include <GL/glut.h>
@@ -9,11 +12,13 @@
 #include "Model.h"
 #include "Skybox.h"
 #include "Consts.h"
+#include "Bunny.h"
 using namespace std;
 
 //	Constants
 #define PI 3.1415265359
 const int ESC = 27;
+
 
 const float zoomFactor = pow(2, 0.1);
 const float yawIncr = 2.0;
@@ -22,6 +27,8 @@ static const float CAM_MOVE = .1f;
 static float MOUSE_SENSITIVITY = .01f;
 static float ZOOM_SPEED = 1;
 static MousePressed MOUSE_PRESSED = NONE;
+static float REFRESH_TIMER = 50; //the update func will be called every 50 ms
+static bool DISABLE_MOUSE = false;
 
 //Camera
 Vect3 camPos;
@@ -46,11 +53,13 @@ float camCenterZ = 0.0;
 
 
 bool lightOn = true;
-int landSize = 40;
+int landSize = 100;
 
 //Model 
 vector<Model> models;
-int MaxRabbit = 2;
+vector<Bunny> bunnies;
+
+int MaxRabbit = 10;
 int MaxTree = 2;
 int MaxBush = 2;
 int MaxCarrot = 2;
@@ -74,6 +83,7 @@ void Update(int value);
 void init();
 //void glutTimerFunc(unsigned int msecs, void (*func)(int value), int value);
 void display();
+void UpdateBunnies();
 void setView();
 void reshape(int, int);
 void updateMouse(int x, int y);
@@ -98,17 +108,17 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(screenWidth, screenHeight);
 	glutInitWindowPosition(100, 150);
-	glutCreateWindow("Assignment 2");
+	glutCreateWindow("Chernobyl Bunnies");
 	glutPassiveMotionFunc(&updateMouse);
 	glutMouseFunc(&mouseClick);
-
+	
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeys);
 
 	init();
-
+	
 
 	glutMainLoop();
 	return 0;
@@ -144,6 +154,9 @@ void MouseMoveUpdate()
 	camPos.x += ZOOM_SPEED * cos(HAng) * mod;
 	camPos.z += ZOOM_SPEED * sin(HAng) * mod;
 	camPos.y += ZOOM_SPEED * sin(VAng) * mod;
+
+	cout << camPos.x << "  " << camPos.y << "  " << camPos.z << endl;
+	cout << HAng << "  " << VAng << endl;
 	
 	}
 
@@ -153,22 +166,30 @@ void MouseMoveUpdate()
 void Update(int value)
 {
 	MouseMoveUpdate();
-
-
+	UpdateBunnies();
+	
 	glutPostRedisplay();
-	glutTimerFunc(50, &Update, value);
+	glutTimerFunc(REFRESH_TIMER, &Update, value);
 };
+
+
+void UpdateBunnies() //All logic updates for bunny should be done in here
+{
+	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
+		  it->Update();
+	
+}
 
 void updateMouse(int x, int y)
 {
-	
+	if(!DISABLE_MOUSE)
 	if(x != screenWidth/2 && y != screenWidth/2) //to prevent the infinite loop call caused by glutWarpPointer
 	{
      float Hdif = (x - screenWidth/2);  //move x by amount mouse moved
 	 float Vdif = (y - screenHeight/2); //move y by amount mouse moved from center
 	 
 	 HAng += Hdif * MOUSE_SENSITIVITY;
-	 VAng += Vdif * MOUSE_SENSITIVITY;  //WHY ARE YOU INVERSED I AM NOT AN AIRPLANE
+	 VAng -= Vdif * MOUSE_SENSITIVITY;  //WHY ARE YOU INVERSED I AM NOT AN AIRPLANE
 	 
 	 glutWarpPointer(screenWidth/2, screenHeight/2);  //reset mouse to center, it recalls update mouse... stupid
 	 calcCam(); //recalc the cam
@@ -189,11 +210,11 @@ void drawLights()
     
 	//Add point source light
 	//GLfloat light_Pos[4] = {5.0, 5.0, -10.0, 1.0};   // Positioned at (5.0, 5.0, -10.0)
-	GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
+	//GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
 	//GLfloat light_Kd[4] = {0.8, 0.8, 0.8, 1.0}; // diffuse light parameters
 	//GLfloat light_Ks[4] = {0.9, 0.2, 0.9, 1.0};    //specular light parameters
 	//glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
- glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
+ //   glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
 	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
 }
@@ -215,12 +236,12 @@ SDL_FreeSurface(g_image_surface);
 void initSkybox(void)
 {
 glGenTextures(6,sbTextureId);
-loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_FRONT], "CherBunnySrc/textures/night.jpg");
+loadTexture(sbTextureId[SKY_RIGHT], "CherBunnySrc/textures/night.jpg");
 
-loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/night_sky.jpg");
-loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/night_sky.jpg");
+loadTexture(sbTextureId[SKY_LEFT], "CherBunnySrc/textures/night.jpg");
+loadTexture(sbTextureId[SKY_BACK], "CherBunnySrc/textures/night.jpg");
+loadTexture(sbTextureId[SKY_UP], "CherBunnySrc/textures/night.jpg");
 loadTexture(sbTextureId[SKY_DOWN], "CherBunnySrc/textures/grass.jpg");
 
 
@@ -286,11 +307,11 @@ glDisable(GL_TEXTURE_2D);
 }
 void init()
 {
-
+	glutSetCursor(GLUT_CURSOR_NONE);
 		//Cam
-	camPos.x = 0;
-	camPos.y = 15;
-	camPos.z = 0;
+	camPos.x = -44.547;
+	camPos.y = 5.24364;
+	camPos.z = 26.7551;
 
 
 	//camLA.x = 5;
@@ -298,8 +319,8 @@ void init()
 	//camLA.z = 0;
 	
 	camRAD = 5;
-	HAng = 2.3;
-	VAng = 1.7;
+	HAng = -1.38;
+	VAng = .03;
 	calcCam();// intz the camLA
 
 	//glClearColor(0.8, 0.8, 0.8, 0.0);
@@ -354,8 +375,8 @@ void loadModels(){
 	for(int i = 0; i < MaxRabbit; i++){
 		int x = (rand() % landSize) - landSize/2;
 		int z = (rand() % landSize) - landSize/2;
-		Model temp (objects[0], glm::vec4(x, 0.95f, z, 1.0));	
-		models.push_back(temp);
+		Bunny temp (objects[0], glm::vec4(x, 0.95f, z, 1.0),1.0);	
+		bunnies.push_back(temp);
 	}
 
 		//Load Bushes
@@ -386,9 +407,12 @@ void loadModels(){
 
 void drawModels(){
 	
-	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) {
-    it->Draw();
- }
+	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) 
+	  it->Draw();
+
+	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
+	  it->Draw();
+ 
 }
 
 void display()
@@ -442,6 +466,17 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'p':				
+		DISABLE_MOUSE = !DISABLE_MOUSE;
+		if(!DISABLE_MOUSE)		
+			glutSetCursor(GLUT_CURSOR_NONE);
+		else
+			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+
+		
+
+		break;
+		
 	case 'l':
 		
 		if(lightOn)

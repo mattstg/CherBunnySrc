@@ -7,7 +7,7 @@
 	};
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
-	
+	enum BunnyStates{ HOPPING, GROUND, ROCKET, EXPLODE};
 
 	
 
