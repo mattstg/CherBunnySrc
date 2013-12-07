@@ -20,6 +20,6 @@ public :
 	~Firework(); 
 	void DeleteFirework(); 	
 	void BuildFirework(float x, float y, float z);
-	void UpdateFirework(const float &time); 
+	void UpdateFirework(); 
 	void DrawFirework(); 
 };

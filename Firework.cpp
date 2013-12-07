@@ -26,10 +26,10 @@ void Firework::BuildFirework(float x, float y, float z){
 void Firework::DeleteFirework(){
 	_particles.clear(); 
 }
-void Firework::UpdateFirework(const float &time){
+void Firework::UpdateFirework(){
 	vector<Particle>::iterator pId; 
 	for(pId = _particles.begin();pId != _particles.end(); ++pId){
-		pId->Update(time);
+		pId->Update();
 	}
 	alpha -= 0.01; 
 	if(alpha<=0){	

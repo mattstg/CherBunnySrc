@@ -13,7 +13,7 @@ Particle::Particle(float x, float y, float z){
 	velocity.y = (rand()%10)-5; 
 	velocity.z = (rand()%30)-5; 
 }
-void Particle::Update(const float &time){
+void Particle::Update(){
 	position.x += velocity.x*factor; 
 	position.y += velocity.y*factor;
 	velocity.y += acceleration.y; 

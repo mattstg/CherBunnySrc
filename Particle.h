@@ -7,5 +7,5 @@ public:
 	Vect3 acceleration; 
 	float factor; 
 	Particle(float x, float y, float z); 
-	void Update(const float &timeElapsed);
+	void Update();
 };
