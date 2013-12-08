@@ -11,11 +11,14 @@
 #include "Firework.h"
 #include <math.h>
 #include "SuperMap.h"
+#include <ctime>
+
 using namespace std;
 
 //	Constants
 #define PI 3.1415265359
 const int ESC = 27;
+
 
 
 const float zoomFactor = pow(2, 0.1);
@@ -25,7 +28,7 @@ static const float CAM_MOVE = .1f;
 static float MOUSE_SENSITIVITY = .01f;
 static float ZOOM_SPEED = 30;
 static MousePressed MOUSE_PRESSED = NONE;
-static float REFRESH_TIMER = 50; //the update func will be called every 50 ms
+
 static bool DISABLE_MOUSE = false;
 
 //Camera
@@ -60,7 +63,7 @@ vector<Bunny> bunnies;
 //fireworks 
 vector<Firework> fireworks; 
 
-int MaxRabbit = 10;
+int MaxRabbit = 30;
 int MaxTree = 2;
 int MaxBush = 2;
 int MaxCarrot = 2;
@@ -112,6 +115,7 @@ GLuint texture = NULL;
 
 int main(int argc, char* argv[])
 {
+	srand (time(0));
 	 SDL_Init(SDL_INIT_EVERYTHING); 
 	screenHeight = 480;
 	screenWidth = 640;
@@ -803,3 +807,6 @@ void drawCube()
 	
 	return;
 }
+
+
+

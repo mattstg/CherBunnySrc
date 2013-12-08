@@ -23,6 +23,7 @@ public:
 	
 private:
 	void SetActives(float x, float z);
+	void RearrangeGrid();
 
 };
 

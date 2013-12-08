@@ -8,5 +8,6 @@
 #include <cstdlib>
 #include <stdlib.h> 
 #include "glm.h"
+#include <math.h>
 
 #endif

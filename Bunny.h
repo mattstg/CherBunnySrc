@@ -3,6 +3,7 @@
 
 #include "Model.h"
 
+
 class Bunny: public Model{
 public:
 	Bunny(){};
@@ -16,6 +17,8 @@ private:
 	float glow;
 	float curAte;
 	float maxAte;
+	float pause;
+	Vect3 velo;
 	BunnyStates state;
 
 

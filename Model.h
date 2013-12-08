@@ -7,6 +7,7 @@
 using namespace std;
 #include "glm\glm\glm.hpp"
 #include "glm\glm\gtx\transform.hpp"
+
 using namespace glm;
 
 class Model
@@ -18,7 +19,7 @@ public:
 	glm::vec4 location;
 	GLfloat scale;
 	float HAng; //horz rotate
-
+	
 	Model();
 	Model(char *s);
 	Model(char *s, glm::vec4 loc);

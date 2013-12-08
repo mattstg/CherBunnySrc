@@ -2,20 +2,26 @@
 #define CONSTS_H
 
 #include "AllGlutInc.h"
+#include <stdlib.h>    
 	
 
 	struct Vect3{
 	float x; float y; float z;
 	};
-
+	
 	const int FLOOR_GRID_ROWS = 19;
 	const int FLOOR_GRID_SIZE = 50; //Tile size
 	const int LAND_SIZE = 900;
+	const float GRAVITY = -1.0f;
+	const float REFRESH_TIMER = 50; //the update func will be called every 50 ms
+	const float BUNNY_SPEED = 5;
+	const float BUNNY_HEIGHT = 16;
+	const float PI = PI; //some ppl cant reach maths pi for some reason
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
 	enum BunnyStates{ HOPPING, GROUND, ROCKET, EXPLODE};
 	struct square2D{int x; int y; int size;};
-
+	
 
 	void static G_LoadTexture(GLuint texture_obj, const char *tFileName) {
 		SDL_Surface *g_image_surface = NULL;
@@ -47,6 +53,11 @@
 		return false;
 	}
 	
+	
+int static getRand()
+	{		
+		return rand();
+	}
 
 
 #endif

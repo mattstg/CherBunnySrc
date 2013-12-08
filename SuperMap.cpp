@@ -53,15 +53,20 @@ void SuperMap::SetActives(float x, float y)
 		b.size = FLOOR_GRID_SIZE*FLOOR_GRID_ROWS;
 
 		map[i]->active = G_BoundCheckSquares(a,b);
-		if(map[i]->active)
-		{
-			std::cout << "Grid " << i << "Has been activated" << std::endl;
-
-		}
+		
 
 
 	}
 	
+}
+
+void SuperMap::RearrangeGrid()
+{
+
+
+
+
+
 }
 
 
