@@ -1,8 +1,8 @@
 #ifndef MODEL
 #define MODEL
 
-#include <GL/glut.h>
-#include "glm.h"
+
+
 #include "Consts.h"
 using namespace std;
 #include "glm\glm\glm.hpp"
@@ -20,6 +20,7 @@ public:
 	GLfloat scale;
 	bool toDelete;
 	float HAng; //horz rotate
+	float VAng; //Vertical rotate
 	
 	Model();
 	Model(char *s);

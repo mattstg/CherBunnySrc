@@ -7,7 +7,7 @@ Model::Model(){
 	world = glm::mat4(1.0f);
 	location = glm::vec4(1.0f);
 	scale = 1.0f;
-	HAng = 0;
+	HAng = 0; VAng = 0;
 	toDelete = false;
 	//loadModel("");
 }
@@ -16,7 +16,7 @@ Model::Model(char *s){
 	world = glm::mat4(1.0f);
 	location = glm::vec4(1.0f);
 	scale = 1.0f;
-	HAng = 0;
+	HAng = 0;VAng = 0;
 	loadModel(s);
 	toDelete = false;
 }
@@ -25,7 +25,7 @@ Model::Model(char *s, glm::vec4 loc){
 	world = glm::mat4(1.0f);
 	location = loc;
 	scale = 1.0f;
-	HAng = 0;
+	HAng = 0;VAng = 0;
 	loadModel(s);
 	toDelete = false;
 }
@@ -34,7 +34,7 @@ Model::Model(char *s, glm::vec4 loc, float scale){
 	world = glm::mat4(1.0f);
 	location = loc;
 	scale = scale;
-	HAng = 0;
+	HAng = 0;VAng = 0;
 	loadModel(s, scale);
 	toDelete = false;
 	
@@ -73,6 +73,7 @@ void Model::Draw(){
 void Model::GenRotateMatrix()
 {
 	glRotatef(HAng, 0.0, 1.0, 0.0);
+	glRotatef(VAng, 1.0, 0.0, 0.0);
 	//can add vertical ang here as well, and any other rotations for flying into air
 	
 

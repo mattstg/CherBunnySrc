@@ -195,7 +195,7 @@ void Update(int value)
 	MouseMoveUpdate();
 	UpdateBunnies();
 	ColiTester();
-	//Deletes();
+	Deletes();
 	setReductionColorValue();
 	glutPostRedisplay();
 	glutTimerFunc(REFRESH_TIMER, &Update, value);
@@ -213,15 +213,24 @@ void Deletes()
 {
 	
 	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
-		if(it->toDelete == true)		
-			bunnies.erase(it);
+		if(it->toDelete == true)	
+		{
+			//bunnies.erase(it);
+			//If a bunny needs to be deleted, it is because it exploded into a firework, instead, he will fall to the ground, create a firework and light on this location
+			it->toDelete = false;
+			//bunnies.erase(it);
+
+		}
 		
 
 	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) 
 		  if(it->toDelete == true)	
 		  {
 			  
-			carrots.erase(it);
+			//carrots.erase(it);
+			  it->location.x = rand() % 200;
+			  it->location.z = rand() % 200;
+			  it->toDelete = false;
 
 		  }
 
@@ -719,10 +728,7 @@ void ColiTester()
 		{
 			//Bunny has collided with carrot!
 			cid->toDelete = true;
-			bid->EatCarrot();	
-			cid->location.z += .05f;
-			cid->HAng += 20.0f;
-			std::cout << "A Bunny has eaten a carrot!";
+			bid->EatCarrot();				
 		}
 	
 	}

@@ -45,6 +45,7 @@ void FloorMap::Draw()
 {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,textureGrass);
+	glColor3f(0.0,0.5,1.0);
 	for(int i = 0; i < FLOOR_GRID_ROWS*FLOOR_GRID_ROWS; i++)
 	{
 		glPushMatrix();
@@ -61,5 +62,6 @@ void FloorMap::Draw()
 		glPopMatrix();
 
 	}
+	glColor3f(1.0,1.0,1.0);
 	glDisable(GL_TEXTURE_2D);
 }

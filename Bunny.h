@@ -12,6 +12,7 @@ public:
 	void Update();
 	void Draw();
 	void EatCarrot();
+	void ResetBunny();
 
 private:
 	float metabolism;

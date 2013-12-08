@@ -17,8 +17,8 @@
 	const float REFRESH_TIMER = 50; //the update func will be called every 50 ms
 	const float BUNNY_SPEED = 5;
 	const float BUNNY_HEIGHT = 5;
-	const float CARROT_SIZE = 5;
-	const float CARROT_FOOD_AMT = 10;
+	const float CARROT_SIZE = 2;
+	const float CARROT_FOOD_AMT = 125;
 	const float PI = PI; //some ppl cant reach maths pi for some reason
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
