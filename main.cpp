@@ -10,6 +10,7 @@
 #include "FloorMap.h"
 #include "Firework.h"
 #include <math.h>
+#include "SuperMap.h"
 using namespace std;
 
 //	Constants
@@ -50,7 +51,7 @@ float camCenterZ = 0.0;
 
 
 bool lightOn = true;
-int landSize = 900;
+
 
 //Model 
 vector<Model> models;
@@ -66,7 +67,8 @@ int MaxCarrot = 2;
 
 
 //Floor map
-FloorMap floorMap;
+SuperMap Map;
+FloorMap TestMap;
 
 
 //Skybox
@@ -126,7 +128,6 @@ int main(int argc, char* argv[])
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeys);
 
-	floorMap.LoadTexture();
 
 
 	init();
@@ -375,9 +376,9 @@ void init()
 	glEnable(GL_DEPTH_TEST);
 
 	//setup ambient test light
-	//GLfloat light_position[] = { landSize/2, landSize/2, landSize/2, 0.0 };
+	//GLfloat light_position[] = { LAND_SIZE/2, LAND_SIZE/2, LAND_SIZE/2, 0.0 };
 	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
+	TestMap.LoadTexture();
 
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT0);
@@ -428,24 +429,24 @@ void loadModels(){
 
 	//Load Rabbits
 	for(int i = 0; i < MaxRabbit; i++){
-		int x = (rand() % landSize) - landSize/2;
-		int z = (rand() % landSize) - landSize/2;
+		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Bunny temp (objects[0], glm::vec4(x, 0.95f, z, 1.0),1.0);	
 		bunnies.push_back(temp);
 	}
 
 		//Load Bushes
 	for(int i = 0; i < MaxBush; i++){
-		int x = (rand() % landSize) - landSize/2;
-		int z = (rand() % landSize) - landSize/2;
+		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
 	}
 
 		//Load Trees
 	for(int i = 0; i < MaxTree; i++){
-		int x = (rand() % landSize) - landSize/2;
-		int z = (rand() % landSize) - landSize/2;
+		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		float size = rand() % 10;
 		Model temp (objects[2], glm::vec4(x, size, z, 1.0), size);	
 		models.push_back(temp);
@@ -453,8 +454,8 @@ void loadModels(){
 
 		//Load Carrots
 	for(int i = 0; i < MaxCarrot; i++){
-		int x = (rand() % landSize) - landSize/2;
-		int z = (rand() % landSize) - landSize/2;
+		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
 	}
@@ -477,8 +478,8 @@ void display()
 	glLoadIdentity();
 	setView();
 	drawLights();
-	//drawFloor(landSize);
-	drawSkybox(landSize/2);	
+	//drawFloor(LAND_SIZE);
+	drawSkybox(LAND_SIZE/2);	
 	drawModels();
 	drawFloorMap();
 	
@@ -504,8 +505,8 @@ void display()
 
 void drawFloorMap()
 {
-	floorMap.Draw();
-
+	Map.Draw(camPos.x,camPos.y);
+	//TestMap.Draw();
 }
 
 void reshape(int w, int h)
@@ -584,10 +585,10 @@ void specialKeys(int key, int x, int y)
 		case GLUT_KEY_DOWN:
 
 
-			VAng += CAM_MOVE;
+			VAng -= CAM_MOVE;
 			break;
 		case GLUT_KEY_UP:
-			VAng -= CAM_MOVE;
+			VAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_PAGE_UP:
 			camPos.x += ZOOM_SPEED * cos(HAng);
@@ -619,7 +620,10 @@ void calcCam()  //sets camera LA and POS from Ang
 {
 	camLA.x = camRAD * cos(HAng);
 	camLA.z = camRAD * sin(HAng);
-	
+	if(VAng > PI/2)
+		VAng = PI/2;
+	if(VAng < -PI/2)
+		VAng = -PI/2;
 	camLA.y = camRAD * sin(VAng);
 	//cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
 
@@ -630,7 +634,7 @@ void calcCam()  //sets camera LA and POS from Ang
 void setView()
 {
 //	Establish the position and orientation of the camera
-
+	//cout << "LA: " << camLA.x << " " << camLA.y << " " << camLA.z << endl << " POS:  "  << camPos.x << " " << camPos.y << " " << camPos.z << endl;
 	//cout << HAng << " , " << VAng << endl;
 	gluLookAt(camPos.x, camPos.y,camPos.z, camLA.x + camPos.x, camLA.y + camPos.y, camLA.z + camPos.z, 0.0, 1.0, 0.0);
 	return;

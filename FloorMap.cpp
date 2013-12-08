@@ -15,6 +15,20 @@ FloorMap::FloorMap()
 
 }
 
+FloorMap::FloorMap(int offSetX, int offSetY)
+{
+	//Create array
+	textureGrass = 0;
+	floorMap = new Floor[FLOOR_GRID_ROWS*FLOOR_GRID_ROWS];  //includes 2D array
+	for(int i = 0; i < FLOOR_GRID_ROWS*FLOOR_GRID_ROWS; i++)
+	{		
+		floorMap[i].x = (i % FLOOR_GRID_ROWS) + (offSetX*FLOOR_GRID_ROWS);
+		floorMap[i].z = (i / FLOOR_GRID_ROWS) + (offSetY*FLOOR_GRID_ROWS);
+
+	}
+
+}
+
 void FloorMap::LoadTexture()
 {
 	//glGenTextures(1,textureGrass);	

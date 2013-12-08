@@ -7,8 +7,7 @@
 #include <vector>
 
 
-const int FLOOR_GRID_ROWS = 19;
-const int FLOOR_GRID_SIZE = 50; //LAND SIZE
+
 
 struct Floor{int x,z;};
 
@@ -23,8 +22,12 @@ public:
 
 	Floor * floorMap;
 
-	void LoadTexture();
+
 	FloorMap();
+	FloorMap(int offestX,int offsetY);
+
+	void LoadTexture();
+	
 	void Draw();
 private:
 

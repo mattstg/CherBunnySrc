@@ -8,8 +8,13 @@
 	float x; float y; float z;
 	};
 
+	const int FLOOR_GRID_ROWS = 19;
+	const int FLOOR_GRID_SIZE = 50; //Tile size
+	const int LAND_SIZE = 900;
+
 	enum MousePressed{ LEFT,RIGHT,NONE};
 	enum BunnyStates{ HOPPING, GROUND, ROCKET, EXPLODE};
+	struct square2D{int x; int y; int size;};
 
 
 	void static G_LoadTexture(GLuint texture_obj, const char *tFileName) {
@@ -23,9 +28,24 @@
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 		glTexImage2D(GL_TEXTURE_2D, 0, g_image_surface->format->BytesPerPixel,g_image_surface->w, g_image_surface->h,0,GL_RGB,GL_UNSIGNED_BYTE,g_image_surface->pixels);
 		SDL_FreeSurface(g_image_surface);
-		if(texture_obj == 0)
-			texture_obj = 0;
-};
+		
+	};
+
+	//return true is a exists between || touching lb and ub (lower/upper bound)
+	bool static G_BoundCheck(int a, int lb, int ub)
+	{
+		if(a >= lb && a <= ub)
+			return true;
+		return false;
+	}
+
+	//returns true if two 2D squares collide 
+	bool static G_BoundCheckSquares(square2D a, square2D b)
+	{
+		if(G_BoundCheck(a.x,b.x,b.x + b.size) || G_BoundCheck(a.x+a.size,b.x,b.x+b.size) || G_BoundCheck(a.y,b.y,b.y + b.size) || G_BoundCheck(a.y+a.size,b.y,b.y+b.size))
+			return true;
+		return false;
+	}
 	
 
 
