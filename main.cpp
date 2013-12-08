@@ -38,8 +38,12 @@ float camRAD;
 float HAng;
 float VAng;
 
-
-
+//Color change 
+float colorR = 1.0f; 
+float colorB = 1.0f; 
+float reductionR;
+float reductionG;
+float reductionB;
 //	Globals
 int screenWidth = 800;
 int screenHeight = 600;
@@ -112,6 +116,7 @@ void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
 void ColiTester();
 void Deletes();
+void setReductionColorValue(); 
 
 
 GLuint texture = NULL;
@@ -191,7 +196,7 @@ void Update(int value)
 	UpdateBunnies();
 	ColiTester();
 	//Deletes();
-
+	setReductionColorValue();
 	glutPostRedisplay();
 	glutTimerFunc(REFRESH_TIMER, &Update, value);
 };
@@ -507,7 +512,18 @@ void loadModels(){
 		carrots.push_back(temp);
 	}
 }
-
+void setReductionColorValue(){
+	if(colorR>=1 && colorB>=1){
+		reductionB = -0.05f; 
+		reductionR = -0.05f; 
+	}
+	if(colorR<=0 && colorB<=0){
+		reductionR = 0.05f; 
+		reductionB = 0.05f; 
+	}
+	colorR += reductionR; 
+	colorB += reductionB; 
+}
 void drawModels(){
 	
 	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) 
@@ -516,8 +532,11 @@ void drawModels(){
 	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
 	  it->Draw();
 
-	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) 
+	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) {	  
+	  glColor3f(colorR,1,colorB); 
 	  it->Draw();
+	  glColor3f(1,1,1); 
+	}
  
 }
 
