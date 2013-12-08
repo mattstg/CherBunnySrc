@@ -68,7 +68,7 @@ vector<Model> carrots;
 //fireworks 
 vector<Firework> fireworks; 
 
-int MaxRabbit = 1;
+int MaxRabbit = 10;
 int MaxTree = 2;
 int MaxBush = 2;
 int MaxCarrot = 60;
@@ -196,6 +196,7 @@ void Update(int value)
 	UpdateBunnies();
 	ColiTester();
 	Deletes();
+	UpdateFireworks();
 	setReductionColorValue();
 	glutPostRedisplay();
 	glutTimerFunc(REFRESH_TIMER, &Update, value);
@@ -218,6 +219,11 @@ void Deletes()
 			//bunnies.erase(it);
 			//If a bunny needs to be deleted, it is because it exploded into a firework, instead, he will fall to the ground, create a firework and light on this location
 			it->toDelete = false;
+			//Firework firework = Firework((int)(it->GetPower()*500),it->GetPower()+1);
+			Firework firework = Firework();
+			firework.BuildFirework(it->location.x,it->location.y,it->location.z);
+			fireworks.push_back(firework);
+
 			//bunnies.erase(it);
 
 		}
@@ -238,8 +244,19 @@ void Deletes()
 		  if(it->toDelete == true)		
 			models.erase(it);
 
-}
+	//
+	//for(vector<Firework>::iterator it = fireworks.end(); it != fireworks.begin();) 
+	if(!fireworks.empty())
+	for(int i = fireworks.size() - 1; i >= 0; i--)
+	{
+		if(fireworks[i].IsDead == true)	
+		{			
+			fireworks.erase(fireworks.begin() + i);
+		}
+		
+	}
 
+}
 
 
 void UpdateFireworks(){
@@ -497,7 +514,7 @@ void loadModels(){
 		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
 	}
-
+	
 		//Load Trees
 	for(int i = 0; i < MaxTree; i++){
 		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
@@ -509,11 +526,10 @@ void loadModels(){
 
 		//Load Carrots
 	for(int i = 0; i < MaxCarrot; i++){
-		int x = (i * 10) % 100;
-		int z = (i / 10) * 10;
+			
 		
-		//int x = rand() % 200;
-		//int z = rand() % 200;
+		int x = rand() % 200;
+		int z = rand() % 200;
 
 		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
@@ -558,6 +574,7 @@ void display()
 	drawLights();
 	//drawFloor(LAND_SIZE);
 	drawSkybox(LAND_SIZE/2);	
+	DrawFireworks();
 	drawModels();
 	drawFloorMap();
 	

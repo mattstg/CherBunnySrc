@@ -15,8 +15,11 @@ public:
 	GLfloat alpha; 
 	GLfloat color[3];
 	bool IsDead; 
+	float explosiveForce;
+	int numParticles;
 public : 
 	Firework();
+	Firework(int numOfParticles, float explosiveForceMultiplier);
 	~Firework(); 
 	void DeleteFirework(); 	
 	void BuildFirework(float x, float y, float z);

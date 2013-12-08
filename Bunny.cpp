@@ -16,14 +16,15 @@ void Bunny::Update(){
 	{
 		if(maxAte != 0)  //if maxDig is not zero, then he is digesting
 		{
-			if(curAte < maxAte) //still chewing his food
-			{
-				curAte += metabolism;
-			} else { //bunny has finished eating his food, now becomes a firework
+			
+			curAte += metabolism;
+			//metabolism += .015f;
+
+			if(curAte > maxAte || maxAte > CARROT_FOOD_AMT*5 ) //if done chewing his food, or ate too much
+			{				
 				state = ROCKET;
 				location.y = 3;
-				VAng = 180;
-				
+				VAng = 90;				
 			}
 		}
 		//Hops around
@@ -75,27 +76,34 @@ void Bunny::Update(){
 	//Else bunny is in the other states
 	if(state == ROCKET)
 	{
-		maxAte -= 2;
+		maxAte -= 5;
 		HAng += 20.0f;
-		location.y += 2.0f;
+		location.y +=5.0f;
 
-		if(maxAte <= 0 || location.y > LAND_SIZE/2) //bunny has digested all the fuel
+		if(maxAte <= 0 || location.y > LAND_SIZE/3) //bunny has digested all the fuel
 		{
 			state = HOPPING;
 			toDelete = true;	
-			VAng = 90; //face first down
+			VAng = 90; //face first back down
 			ResetBunny();
 			//bunny will fall back to ground
 		}
 	}
 
-	glow = curAte / (3*CARROT_FOOD_AMT);  //max glow occurs after digesting 3 carrots worth
+	glow = curAte / (5*CARROT_FOOD_AMT);  //max glow occurs after digesting 4 carrots worth
 	if(glow >= 1)
 		glow = 1;
 
 	Model::Update();
 };
 
+
+float Bunny::GetPower()
+{
+	return (float)maxAte / (float)(5*CARROT_FOOD_AMT);
+
+
+}
 
 void Bunny::ResetBunny()
 {

@@ -10,6 +10,20 @@ Firework::Firework(){
 	color[blue] = (rand() / (float)RAND_MAX); 
 	alpha = 1.0f; 
 	IsDead = false; 
+	numParticles = 100;
+	explosiveForce = 1;
+}
+
+
+Firework::Firework(int tnumParticles, float texplosiveForce){
+	//randomizes the color of the firework 
+	color[red] = (rand() / (float)RAND_MAX); 
+	color[green] = (rand() / (float)RAND_MAX); 
+	color[blue] = (rand() / (float)RAND_MAX); 
+	alpha = 1.0f; 
+	IsDead = false; 
+	numParticles = tnumParticles;
+	explosiveForce = texplosiveForce;
 }
 
 Firework::~Firework(){
@@ -17,8 +31,9 @@ Firework::~Firework(){
 }
 
 void Firework::BuildFirework(float x, float y, float z){
-	for(int i = 0; i<100;i++){
-		Particle p = Particle(x,y,z);  
+	for(int i = 0; i<numParticles;i++){
+		Particle p = Particle(x,y,z); 
+		p.factor *= explosiveForce;
 		_particles.push_back(p);
 	
 	}
