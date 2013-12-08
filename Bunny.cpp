@@ -9,6 +9,7 @@ Bunny::Bunny(char *s,glm::vec4 loc, float scale) : Model(s,loc,scale)
 	curAte = 0;
 	maxAte = 0; //set to zero, increases when collides with carrot
 	state = GROUND;
+	velo.x = 0; velo.y =0; velo.z= 0;
 	
 };
 
@@ -55,12 +56,14 @@ void Bunny::Update(){
 		{
 			//hop into air
 			state = HOPPING;
-			velo.y = -10; 
-			location.y = 2;
+			velo.y = 10; 
+			location.y = BUNNY_HEIGHT/2 + 2;
 			
-			HAng = getRand() % 2*PI;  
+	
+			HAng = (getRand() % 628) / 100;  
+			
 			velo.x = cos(HAng) *  cos(HAng) * BUNNY_SPEED;
-			velo.y = sin(HAng) * sin(HAng) * BUNNY_SPEED;
+			velo.z = sin(HAng) * sin(HAng) * BUNNY_SPEED;
 		}
 		
 	}

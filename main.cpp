@@ -115,7 +115,8 @@ GLuint texture = NULL;
 
 int main(int argc, char* argv[])
 {
-	srand (time(0));
+	IntzRand();
+	
 	 SDL_Init(SDL_INIT_EVERYTHING); 
 	screenHeight = 480;
 	screenWidth = 640;
@@ -151,6 +152,7 @@ void mouseClick(int button, int state, int x, int y)
 		}
 		else if(button == GLUT_RIGHT_BUTTON)		
 		{			
+			
 			MOUSE_PRESSED = RIGHT;
 		} 			
 	}else if (state == GLUT_UP)
