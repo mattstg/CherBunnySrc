@@ -3,7 +3,8 @@
 
 Bunny::Bunny(char *s,glm::vec4 loc, float scale) : Model(s,loc,scale)
 {
-	pause = rand() % 3000;
+	//TEST1 pause = rand() % 3000;
+	pause = 10000; //TEST1
 	metabolism = rand() % 4;
 	glow = 0;
 	curAte = 0;
@@ -25,6 +26,7 @@ void Bunny::Update(){
 				curAte += metabolism;
 			} else { //bunny has finished eating his food, now becomes a firework
 				state = ROCKET;
+				std::cout << "ROCKET!";
 			}
 		}
 		//Hops around
@@ -41,7 +43,8 @@ void Bunny::Update(){
 		{
 			location.y = BUNNY_HEIGHT/2;
 			state = GROUND;
-			pause = rand() % 3000;
+			//TEST1 pause = rand() % 3000;
+			pause = 10000;//TEST1
 			velo.x = 0;
 			velo.y = 0;
 			velo.z = 0;
@@ -85,6 +88,15 @@ void Bunny::Update(){
 
 	Model::Update();
 };
+
+
+
+void Bunny::EatCarrot()
+{
+	maxAte += CARROT_FOOD_AMT;
+
+
+}
 
 void Bunny::Draw(){
 	

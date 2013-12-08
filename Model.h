@@ -18,6 +18,7 @@ public:
 	glm::mat4 world;
 	glm::vec4 location;
 	GLfloat scale;
+	bool toDelete;
 	float HAng; //horz rotate
 	
 	Model();

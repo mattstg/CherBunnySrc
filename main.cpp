@@ -59,14 +59,15 @@ bool lightOn = true;
 //Model 
 vector<Model> models;
 vector<Bunny> bunnies;
+vector<Model> carrots;
 
 //fireworks 
 vector<Firework> fireworks; 
 
-int MaxRabbit = 30;
+int MaxRabbit = 1;
 int MaxTree = 2;
 int MaxBush = 2;
-int MaxCarrot = 2;
+int MaxCarrot = 60;
 
 
 //Floor map
@@ -109,6 +110,8 @@ void DrawFireworks();
 void drawCube();
 void drawFloor(int size);
 void loadTexture(GLuint texture_obj, const char *tFileName);
+void ColiTester();
+void Deletes();
 
 
 GLuint texture = NULL;
@@ -186,7 +189,9 @@ void Update(int value)
 {
 	MouseMoveUpdate();
 	UpdateBunnies();
-	
+	ColiTester();
+	//Deletes();
+
 	glutPostRedisplay();
 	glutTimerFunc(REFRESH_TIMER, &Update, value);
 };
@@ -198,6 +203,30 @@ void UpdateBunnies() //All logic updates for bunny should be done in here
 		  it->Update();
 	
 }
+
+void Deletes()
+{
+	
+	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
+		if(it->toDelete == true)		
+			bunnies.erase(it);
+		
+
+	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) 
+		  if(it->toDelete == true)	
+		  {
+			  
+			carrots.erase(it);
+
+		  }
+
+	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) 
+		  if(it->toDelete == true)		
+			models.erase(it);
+
+}
+
+
 
 void UpdateFireworks(){
 	if(!fireworks.empty()){
@@ -435,8 +464,14 @@ void loadModels(){
 
 	//Load Rabbits
 	for(int i = 0; i < MaxRabbit; i++){
-		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
-		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int x = 50;
+		int z = 20;
+		
+		//int x = rand() % 200;
+		//int z = rand() % 200;
+
+		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Bunny temp (objects[0], glm::vec4(x, 0.95f, z, 1.0),1.0);	
 		bunnies.push_back(temp);
 	}
@@ -460,10 +495,16 @@ void loadModels(){
 
 		//Load Carrots
 	for(int i = 0; i < MaxCarrot; i++){
-		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
-		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int x = (i * 10) % 100;
+		int z = (i / 10) * 10;
+		
+		//int x = rand() % 200;
+		//int z = rand() % 200;
+
+		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
-		models.push_back(temp);
+		carrots.push_back(temp);
 	}
 }
 
@@ -473,6 +514,9 @@ void drawModels(){
 	  it->Draw();
 
 	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
+	  it->Draw();
+
+	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) 
 	  it->Draw();
  
 }
@@ -635,7 +679,35 @@ void calcCam()  //sets camera LA and POS from Ang
 
 }
 
+void ColiTester()
+{
+	//for_each (myvector.begin(), myvector.end(), myfunction);
+	
+	if(!bunnies.empty() && !carrots.empty())
+	for(vector<Bunny>::iterator bid = bunnies.begin();bid != bunnies.end();++bid)
+	for(vector<Model>::iterator cid = carrots.begin();cid != carrots.end();++cid){
+		square2D a;
+		a.x = bid->location.x - BUNNY_HEIGHT/2;
+		a.y = bid->location.z - BUNNY_HEIGHT/2;
+		a.size = BUNNY_HEIGHT;
+				
+		square2D b;
+		b.x = cid->location.x - CARROT_SIZE/2;
+		b.y = cid->location.z - CARROT_SIZE/2;
+		b.size = CARROT_SIZE;
 
+		if(G_BoundCheckSquares(a,b))
+		{
+			//Bunny has collided with carrot!
+			cid->toDelete = true;
+			bid->EatCarrot();	
+			cid->location.z += .05f;
+			cid->HAng += 20.0f;
+			std::cout << "A Bunny has eaten a carrot!";
+		}
+	
+	}
+}
 
 void setView()
 {

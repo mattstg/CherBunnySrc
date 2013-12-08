@@ -8,6 +8,7 @@ Model::Model(){
 	location = glm::vec4(1.0f);
 	scale = 1.0f;
 	HAng = 0;
+	toDelete = false;
 	//loadModel("");
 }
 
@@ -17,6 +18,7 @@ Model::Model(char *s){
 	scale = 1.0f;
 	HAng = 0;
 	loadModel(s);
+	toDelete = false;
 }
 
 Model::Model(char *s, glm::vec4 loc){
@@ -25,6 +27,7 @@ Model::Model(char *s, glm::vec4 loc){
 	scale = 1.0f;
 	HAng = 0;
 	loadModel(s);
+	toDelete = false;
 }
 
 Model::Model(char *s, glm::vec4 loc, float scale){
@@ -33,6 +36,7 @@ Model::Model(char *s, glm::vec4 loc, float scale){
 	scale = scale;
 	HAng = 0;
 	loadModel(s, scale);
+	toDelete = false;
 	
 }
 /*

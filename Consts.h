@@ -17,6 +17,8 @@
 	const float REFRESH_TIMER = 50; //the update func will be called every 50 ms
 	const float BUNNY_SPEED = 5;
 	const float BUNNY_HEIGHT = 5;
+	const float CARROT_SIZE = 5;
+	const float CARROT_FOOD_AMT = 10;
 	const float PI = PI; //some ppl cant reach maths pi for some reason
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
@@ -49,7 +51,7 @@
 	//returns true if two 2D squares collide 
 	bool static G_BoundCheckSquares(square2D a, square2D b)
 	{
-		if(G_BoundCheck(a.x,b.x,b.x + b.size) || G_BoundCheck(a.x+a.size,b.x,b.x+b.size) || G_BoundCheck(a.y,b.y,b.y + b.size) || G_BoundCheck(a.y+a.size,b.y,b.y+b.size))
+		if((G_BoundCheck(a.x,b.x,b.x + b.size) || G_BoundCheck(a.x+a.size,b.x,b.x+b.size)) && (G_BoundCheck(a.y,b.y,b.y + b.size) || G_BoundCheck(a.y+a.size,b.y,b.y+b.size)))
 			return true;
 		return false;
 	}

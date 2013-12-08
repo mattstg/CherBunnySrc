@@ -11,6 +11,7 @@ public:
 
 	void Update();
 	void Draw();
+	void EatCarrot();
 
 private:
 	float metabolism;
