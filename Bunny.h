@@ -13,7 +13,8 @@ public:
 	void Draw();
 	void EatCarrot();
 	void ResetBunny();
-	float GetPower();  //return the amount of power the bunny has, 0-1, 1 being max power a bunny can store
+	float GetPowerFactor();
+	float power;  //return the amount of power the bunny has, 0-1, 1 being max power a bunny can store
 
 private:
 	float metabolism;

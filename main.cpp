@@ -218,13 +218,16 @@ void Deletes()
 		{
 			//bunnies.erase(it);
 			//If a bunny needs to be deleted, it is because it exploded into a firework, instead, he will fall to the ground, create a firework and light on this location
-			it->toDelete = false;
-			//Firework firework = Firework((int)(it->GetPower()*500),it->GetPower()+1);
-			Firework firework = Firework();
+			
+			Firework firework = Firework((int)(it->GetPowerFactor()*500),it->GetPowerFactor()/2+1);
+			
+			//Firework firework = Firework();
 			firework.BuildFirework(it->location.x,it->location.y,it->location.z);
 			fireworks.push_back(firework);
 
 			//bunnies.erase(it);
+			it->toDelete = false;
+			it->ResetBunny();
 
 		}
 		

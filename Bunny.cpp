@@ -5,6 +5,7 @@ Bunny::Bunny(char *s,glm::vec4 loc, float scale) : Model(s,loc,scale)
 {
 	ResetBunny();
 	state = GROUND;
+	power = 0;
 	
 	
 };
@@ -84,8 +85,8 @@ void Bunny::Update(){
 		{
 			state = HOPPING;
 			toDelete = true;	
-			VAng = 90; //face first back down
-			ResetBunny();
+			VAng = 90; //face first back down		
+			
 			//bunny will fall back to ground
 		}
 	}
@@ -98,12 +99,6 @@ void Bunny::Update(){
 };
 
 
-float Bunny::GetPower()
-{
-	return (float)maxAte / (float)(5*CARROT_FOOD_AMT);
-
-
-}
 
 void Bunny::ResetBunny()
 {
@@ -114,13 +109,21 @@ void Bunny::ResetBunny()
 	maxAte = 0; //set to zero, increases when collides with carrot
 	state = HOPPING;
 	velo.x = 0; velo.y =0; velo.z= 0;
+	power = 0;
 
 }
 
+float Bunny::GetPowerFactor()
+{
+	return power/(float)(5*CARROT_FOOD_AMT);
+
+
+}
 
 void Bunny::EatCarrot()
 {
 	maxAte += CARROT_FOOD_AMT;
+	power += CARROT_FOOD_AMT;
 
 }
 
