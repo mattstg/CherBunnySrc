@@ -13,7 +13,7 @@
 	const int FLOOR_GRID_ROWS = 19;
 	const int FLOOR_GRID_SIZE = 50; //Tile size
 	const int LAND_SIZE = 900;
-	const float GRAVITY = -.1f;
+	const float GRAVITY = -1.0f;
 	const float REFRESH_TIMER = 50; //the update func will be called every 50 ms
 	const float BUNNY_SPEED = 5;
 	const float BUNNY_HEIGHT = 5;

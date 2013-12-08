@@ -57,10 +57,11 @@ void Model::Draw(){
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat2_diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat2_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat2_shininess);
+	
+	
 	glTranslatef(location.x,location.y,location.z);
 	GenRotateMatrix();
-	
-	
+
 	glmDraw(model, GLM_SMOOTH|GLM_MATERIAL);
 	glPopMatrix();
 }
@@ -69,7 +70,7 @@ void Model::GenRotateMatrix()
 {
 	glRotatef(HAng, 0.0, 1.0, 0.0);
 	//can add vertical ang here as well, and any other rotations for flying into air
-
+	
 
 
 

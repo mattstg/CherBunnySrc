@@ -56,14 +56,20 @@ void Bunny::Update(){
 		{
 			//hop into air
 			state = HOPPING;
-			velo.y = 10; 
+			velo.y = 2; 
 			location.y = BUNNY_HEIGHT/2 + 2;
 			
 	
-			HAng = (getRand() % 628) / 100;  
+			HAng = (getRand() % 628) / 100.0f;  
 			
-			velo.x = cos(HAng) *  cos(HAng) * BUNNY_SPEED;
-			velo.z = sin(HAng) * sin(HAng) * BUNNY_SPEED;
+			velo.z = cos(HAng) *  BUNNY_SPEED;
+			velo.x = sin(HAng) *  BUNNY_SPEED;
+
+			
+
+			
+			HAng = HAng * (180/3.14f); //using PI constant causes infinity error.
+			
 		}
 		
 	}

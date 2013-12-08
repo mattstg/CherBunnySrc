@@ -406,7 +406,7 @@ void init()
 	loadModels();
 
 	printInstructions();
-	glutTimerFunc(6000, &Update, 0); //first time calls after some gap in time in order to allow some render time
+	glutTimerFunc(50, &Update, 0); //first time calls after some gap in time in order to allow some render time
 	return;
 }
 
