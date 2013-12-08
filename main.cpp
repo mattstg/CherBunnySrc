@@ -39,8 +39,8 @@ float HAng;
 float VAng;
 
 //Color change 
-float colorR = 1.0f; 
-float colorB = 1.0f; 
+float colorR = 0.91f; 
+float colorB = 0.14f; 
 float reductionR;
 float reductionG;
 float reductionB;
@@ -522,7 +522,7 @@ void loadModels(){
 	}
 }
 void setReductionColorValue(){
-	if(colorR>=1 && colorB>=1){
+	if(colorR>=0.9f && colorB>=0.13f){
 		reductionB = -0.05f; 
 		reductionR = -0.05f; 
 	}
@@ -542,7 +542,7 @@ void drawModels(){
 	  it->Draw();
 
 	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) {	  
-	  glColor3f(colorR,1,colorB); 
+		glColor3f(colorR,0.5f,colorB); 
 	  it->Draw();
 	  glColor3f(1,1,1); 
 	}
