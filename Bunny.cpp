@@ -27,7 +27,7 @@ void Bunny::Update(){
 				
 				MoveBunny(G_IntzVector(0,3,0));
 				//location.y = 3;
-				VAng = 90;				
+				VAng = -90;				
 			}
 		}
 		//Hops around
@@ -62,7 +62,7 @@ void Bunny::Update(){
 		{
 			//hop into air
 			state = HOPPING;
-			velo.y = 2; 
+			velo.y = .2f; 
 			location.y = BUNNY_HEIGHT/2 + 2;
 			
 	
@@ -91,7 +91,7 @@ void Bunny::Update(){
 		{
 			state = HOPPING;
 			toDelete = true;	
-			VAng = -90; //face first back down		
+			VAng = 90; //face first back down		
 			
 			//bunny will fall back to ground
 		}
