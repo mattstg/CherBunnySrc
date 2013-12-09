@@ -9,8 +9,8 @@ SuperMap::SuperMap()
 	for(int i = 0; i < 9; i++)
 	{
 		map[i] = new Floors;
-		map[i]->x = i % 3;
-		map[i]->y = i / 3;
+		map[i]->x = (i % 3) - 1;
+		map[i]->y = (i / 3) - 1;
 		map[i]->active = true;
 		map[i]->fmap = new FloorMap(map[i]->x,map[i]->y);
 		map[i]->fmap->LoadTexture();

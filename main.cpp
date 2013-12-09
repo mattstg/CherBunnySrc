@@ -25,8 +25,9 @@ const float zoomFactor = pow(2, 0.1);
 const float yawIncr = 2.0;
 const float pitchIncr = 2.0;
 static const float CAM_MOVE = .1f;
+static float ZOOM_SPEED_FACTOR = 1;
 static float MOUSE_SENSITIVITY = .01f;
-static float ZOOM_SPEED = 30;
+static float ZOOM_SPEED = 10;
 static MousePressed MOUSE_PRESSED = NONE;
 
 static bool DISABLE_MOUSE = false;
@@ -101,6 +102,7 @@ void display();
 void UpdateBunnies();
 void UpdateFireworks(); 
 void setView();
+void CamMove(bool foward);
 void reshape(int, int);
 void updateMouse(int x, int y);
 void mouseClick(int button, int state, int x, int y);
@@ -174,14 +176,9 @@ void MouseMoveUpdate()
 {
 	if(MOUSE_PRESSED != NONE) //A mouse key is pressed during update
 	{
-	int mod = 1; //move foward
-	if(MOUSE_PRESSED == RIGHT)  //right click is pressed
-		mod = -1; //move backwards instead
+		
+	CamMove(MOUSE_PRESSED == LEFT);
 	
-	camPos.x += ZOOM_SPEED * cos(HAng) * mod;
-	camPos.z += ZOOM_SPEED * sin(HAng) * mod;
-	camPos.y += ZOOM_SPEED * sin(VAng) * mod;
-
 	//cout << camPos.x << "  " << camPos.y << "  " << camPos.z << endl;
 	//cout << HAng << "  " << VAng << endl;
 	
@@ -624,6 +621,7 @@ void reshape(int w, int h)
 
 void keyboard(unsigned char key, int x, int y)
 {
+	
 	switch (key)
 	{
 	case 'p':				
@@ -636,9 +634,39 @@ void keyboard(unsigned char key, int x, int y)
 		
 
 		break;
-		
-	case 'l':
-		
+
+	case 'w':
+		VAng += CAM_MOVE;
+		break;
+	case 's':
+		VAng -= CAM_MOVE;			
+		break;
+	case 'd':
+		HAng += CAM_MOVE;
+		break;
+	case 'a':
+		HAng -=CAM_MOVE;
+		break;
+	case 'q':
+		CamMove(true);
+		break;
+	case 'e':
+		CamMove(false);
+		break;
+	case 'f':
+		VAng = 0;
+		break;
+
+	case 'z':
+		ZOOM_SPEED_FACTOR += .5f;
+		break;
+	case 'x':
+		ZOOM_SPEED_FACTOR -= .5f;
+		if(ZOOM_SPEED_FACTOR < .5f)
+			ZOOM_SPEED_FACTOR = .5f;
+		break;
+
+	case 'l':		
 		if(lightOn)
 			glDisable(GL_LIGHT0);
 		else
@@ -654,9 +682,24 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 		default:
 			break;
+
+		
+
 	}
+	calcCam(); 
 	glutPostRedisplay();
 	return;
+}
+
+void CamMove(bool foward)
+{
+	int mod = 1;
+	if(!foward)
+		mod = -1;
+	camPos.x += ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod;
+	camPos.z += ZOOM_SPEED * sin(HAng) * ZOOM_SPEED_FACTOR * mod;
+	camPos.y += ZOOM_SPEED * sin(VAng) * ZOOM_SPEED_FACTOR * mod;
+
 }
 
 
@@ -689,14 +732,10 @@ void specialKeys(int key, int x, int y)
 			VAng += CAM_MOVE;
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camPos.x += ZOOM_SPEED * cos(HAng);
-			camPos.z += ZOOM_SPEED * sin(HAng);
-			camPos.y += ZOOM_SPEED * sin(VAng);
+			CamMove(true);
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camPos.x -= ZOOM_SPEED * cos(HAng);
-			camPos.z -= ZOOM_SPEED * sin(HAng);
-			camPos.y -= ZOOM_SPEED * sin(VAng);
+			CamMove(false);
 			break;
 		default:
 			break;

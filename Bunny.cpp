@@ -85,7 +85,7 @@ void Bunny::Update(){
 		{
 			state = HOPPING;
 			toDelete = true;	
-			VAng = 90; //face first back down		
+			VAng = -90; //face first back down		
 			
 			//bunny will fall back to ground
 		}
