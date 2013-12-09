@@ -42,6 +42,8 @@ float VAng;
 //Color change 
 float colorR = 0.91f; 
 float colorB = 0.14f; 
+float TreecolorR = 0.5f; 
+float TreecolorB = 0.07f; 
 float reductionR;
 float reductionG;
 float reductionB;
@@ -109,6 +111,7 @@ void specialKeys(int key, int x, int y);
 void printInstructions();
 void drawAxes();
 void calcCam();
+void SpawnCarrot();
 void drawFloorMap();
 void DrawFireworks(); 
 void drawCube();
@@ -310,6 +313,19 @@ glPushMatrix();
 glPopMatrix();
 }
 
+
+void SpawnCarrot()
+{
+	if(!carrots.empty())
+	{
+		int thisCarrot = rand() % carrots.size() - 1;
+		if(thisCarrot < 0)
+			thisCarrot = 0;
+		carrots[thisCarrot].location.z = camPos.z;
+		carrots[thisCarrot].location.x = camPos.x;		
+	}
+
+}
 
 void MoveToOuterSkybox(Model * it)
 {
@@ -650,14 +666,13 @@ void loadModels(){
 	//Load Rabbits
 	std::cout << endl << "Loading Rabbits";
 	for(int i = 0; i < MaxRabbit; i++){
-		int x = camPos.x;
-		int z = camPos.z;
+		
 		
 		//int x = rand() % 200;
 		//int z = rand() % 200;
 
-		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
-		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int x = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
 		Bunny temp (objects[0], glm::vec4(x, 0.95f, z, 1.0),1.0);	
 		bunnies.push_back(temp);
 		std::cout << ".";
@@ -666,8 +681,8 @@ void loadModels(){
 	std::cout << endl << "Loading Shrubbery";	
 		//Load Bushes
 	for(int i = 0; i < MaxBush; i++){
-		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
-		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int x = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
 		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
 		std::cout << ".";
@@ -676,8 +691,8 @@ void loadModels(){
 	std::cout << endl << "Loading Trees";	
 		//Load Trees
 	for(int i = 0; i < MaxTree; i++){
-		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
-		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int x = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
 		float size = rand() % 10;
 		Model temp (objects[2], glm::vec4(x, size, z, 1.0), size);	
 		trees.push_back(temp);
@@ -689,8 +704,9 @@ void loadModels(){
 	for(int i = 0; i < MaxCarrot; i++){
 			
 		
-		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
-		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int x = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
+		int z = (rand() % LAND_SIZE) + camPos.x - LAND_SIZE/2;
+		int y = -1.0f;
 		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
@@ -710,17 +726,28 @@ void setReductionColorValue(){
 	}
 	colorR += reductionR; 
 	colorB += reductionB; 
+	TreecolorR += reductionR; 
+	TreecolorB += reductionB; 
 }
 void drawModels(){
 	
 	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) 
+	{
+	  glColor3f(TreecolorR,0.5f,TreecolorR); 
 	  it->Draw();
+      glColor3f(1,1,1);
+	}
 
 	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
 	  it->Draw();
 
 	for(vector<Model>::iterator it = trees.begin(); it != trees.end(); ++it) 
+	{
+		glColor3f(TreecolorR,0.3f,TreecolorR); 
 	  it->Draw();
+      glColor3f(1,1,1);
+
+	}
 
 	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) {	  
 		glColor3f(colorR,0.5f,colorB); 
@@ -820,6 +847,9 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case 'f':
 		VAng = 0;
+		break;
+	case 'r':
+		SpawnCarrot();
 		break;
 
 	case 'z':

@@ -29,10 +29,10 @@
 	const int GAME_MAP_BOUND_W = 3*LAND_SIZE;
 	const int GAME_MAP_BOUND_H = LAND_SIZE/4;
 	
-	const int MaxRabbit = 1;
-	const int MaxTree = 1;
-	const int MaxBush = 1;
-	const int MaxCarrot = 1;
+	const int MaxRabbit = 40;
+	const int MaxTree = 5;
+	const int MaxBush = 5;
+	const int MaxCarrot = 120;
 
 
 
