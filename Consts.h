@@ -25,9 +25,16 @@
 	const float CARROT_FOOD_AMT = 125;
 	const float PI = PI; //some ppl cant reach maths pi for some reason
 
-	const int GAME_MAP_BOUND_H_LB = 500;
+	const int GAME_MAP_BOUND_W_LB = 500;
 	const int GAME_MAP_BOUND_W = 3*LAND_SIZE;
 	const int GAME_MAP_BOUND_H = LAND_SIZE/4;
+	
+	const int MaxRabbit = 1;
+	const int MaxTree = 1;
+	const int MaxBush = 1;
+	const int MaxCarrot = 1;
+
+
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
 	enum BunnyStates{ HOPPING, GROUND, ROCKET, EXPLODE};
@@ -62,6 +69,15 @@
 		if((G_BoundCheck(a.x,b.x,b.x + b.size) || G_BoundCheck(a.x+a.size,b.x,b.x+b.size)) && (G_BoundCheck(a.y,b.y,b.y + b.size) || G_BoundCheck(a.y+a.size,b.y,b.y+b.size)))
 			return true;
 		return false;
+	}
+
+	Vect3 static G_IntzVector(int x, int y,int z)
+	{
+		Vect3 toRet;
+		toRet.x = x;
+		toRet.y = y;
+		toRet.z = z;
+		return toRet;
 	}
 	
 void static IntzRand()

@@ -44,6 +44,13 @@ Model::~Model(){
 	delete model;
 }
 */
+
+Model* Model::retSelf()
+{
+	return this;
+
+}
+
 void Model::Update(){
 
 

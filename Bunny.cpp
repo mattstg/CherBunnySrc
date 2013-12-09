@@ -24,7 +24,9 @@ void Bunny::Update(){
 			if(curAte > maxAte || maxAte > CARROT_FOOD_AMT*5 ) //if done chewing his food, or ate too much
 			{				
 				state = ROCKET;
-				location.y = 3;
+				
+				MoveBunny(G_IntzVector(0,3,0));
+				//location.y = 3;
 				VAng = 90;				
 			}
 		}
@@ -33,9 +35,11 @@ void Bunny::Update(){
 
 	if(state == HOPPING)
 	{
-		location.x += velo.x;
-		location.y += velo.y;
-		location.z += velo.z;
+		//location.x += velo.x;
+		//location.y += velo.y;
+		//location.z += velo.z;
+		MoveBunny(G_IntzVector(velo.x,velo.y,velo.z));
+
 		velo.y += GRAVITY;
 
 		if(location.y < BUNNY_HEIGHT/2)
@@ -73,6 +77,8 @@ void Bunny::Update(){
 		}
 		
 	}
+
+	
 	
 	//Else bunny is in the other states
 	if(state == ROCKET)
@@ -98,6 +104,28 @@ void Bunny::Update(){
 	Model::Update();
 };
 
+
+
+
+void Bunny::MoveBunny(Vect3 move)
+{
+	location.x += move.x;
+	location.y += move.y;
+	location.z += move.z;
+	
+	if(location.x > GAME_MAP_BOUND_W)
+		location.x = GAME_MAP_BOUND_W -2;
+	if(location.z > GAME_MAP_BOUND_W)
+		location.z = GAME_MAP_BOUND_W - 2;
+	
+
+	if(location.x < GAME_MAP_BOUND_W_LB)
+		location.x = GAME_MAP_BOUND_W_LB;
+	if(location.z < GAME_MAP_BOUND_W_LB)
+		location.z = GAME_MAP_BOUND_W_LB;
+
+
+}
 
 
 void Bunny::ResetBunny()

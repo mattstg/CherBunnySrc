@@ -27,6 +27,8 @@ public:
 	Model(char *s, glm::vec4 loc);
 	Model(char *s, glm::vec4 loc, float scale);
 
+
+	Model* retSelf();
 	void forceCnstr(char *s, glm::vec4 loc, float scale);
 	void Update();
 	void Draw();

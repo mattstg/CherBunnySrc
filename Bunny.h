@@ -24,6 +24,7 @@ private:
 	float pause;
 	Vect3 velo;
 	BunnyStates state;
+	void MoveBunny(Vect3 move);
 
 
 

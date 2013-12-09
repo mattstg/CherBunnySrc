@@ -65,14 +65,12 @@ bool lightOn = true;
 vector<Model> models;
 vector<Bunny> bunnies;
 vector<Model> carrots;
+vector<Model> trees;
 
 //fireworks 
 vector<Firework> fireworks; 
 
-int MaxRabbit = 1;
-int MaxTree = 0;
-int MaxBush = 0;
-int MaxCarrot = 1;
+
 
 
 //Floor map
@@ -119,6 +117,8 @@ void loadTexture(GLuint texture_obj, const char *tFileName);
 void ColiTester();
 void Deletes();
 void setReductionColorValue(); 
+void BringEverythingIntoSkybox();
+void MoveToOuterSkybox(Model * t);
 
 
 GLuint texture = NULL;
@@ -194,10 +194,12 @@ void Update(int value)
 	ColiTester();
 	Deletes();
 	UpdateFireworks();
-	setReductionColorValue();
+	BringEverythingIntoSkybox();
+	setReductionColorValue();	
 	glutPostRedisplay();
 	glutTimerFunc(REFRESH_TIMER, &Update, value);
 };
+
 
 
 void UpdateBunnies() //All logic updates for bunny should be done in here
@@ -234,8 +236,9 @@ void Deletes()
 		  {
 			  
 			//carrots.erase(it);
-			  it->location.x = rand() % 200;
-			  it->location.z = rand() % 200;
+			  
+			  it->location.x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+			  it->location.z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
 			  it->toDelete = false;
 
 		  }
@@ -307,6 +310,151 @@ glPushMatrix();
 glPopMatrix();
 }
 
+
+void MoveToOuterSkybox(Model * it)
+{
+
+	int d = rand() % 4;
+	if(d == 0)
+	{
+		it->location.x = camPos.x - LAND_SIZE/2;
+
+		int tx = rand() % LAND_SIZE;
+		tx -= LAND_SIZE/2;
+		tx += camPos.z;
+		it->location.z = tx;
+
+		
+
+	} else if (d == 1) {
+
+		it->location.x = camPos.x + LAND_SIZE/2;
+
+		int tx = rand() % LAND_SIZE;
+		tx -= LAND_SIZE/2;
+		tx += camPos.z;
+		it->location.z = tx;
+
+		
+	} else if ( d == 2) {
+
+		it->location.z = camPos.z - LAND_SIZE/2 ;
+
+		int tx = rand() % LAND_SIZE;
+		tx -= LAND_SIZE/2;
+		tx += camPos.x;
+		it->location.x = tx;
+
+		
+
+
+	} else if ( d == 3) {
+
+		it->location.z = camPos.z + LAND_SIZE/2;
+
+		int tx = rand() % LAND_SIZE;
+		tx -= LAND_SIZE/2;
+		tx += camPos.x;
+		it->location.x = tx;
+
+		
+
+	}
+	
+	
+
+}
+
+void BringEverythingIntoSkybox()
+{
+	//grabs all models that reached too far out of range of the skybox and replaces them randomly just
+	//outisde the skybox
+	for(vector<Model>::iterator it = models.begin(); it != models.end(); ++it) 
+	{
+		square2D a;
+		a.x = it->location.x;
+		a.y = it->location.z;
+		a.size = 1;
+
+		square2D b; //acceptable render square
+		b.x = camPos.x - LAND_SIZE/2 - 50;
+		b.y = camPos.z - LAND_SIZE/2 - 50;
+		b.size = LAND_SIZE + 200; 
+
+		if(!G_BoundCheckSquares(a,b))
+		{
+			//then this object does not reside in the acceptable render square, place him somewhere randomly
+			//around the sky box
+			MoveToOuterSkybox(it->retSelf());
+		}
+
+
+	}
+
+	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it)
+	{
+		square2D a;
+		a.x = it->location.x;
+		a.y = it->location.z;
+		a.size = 1;
+
+		square2D b; //acceptable render square
+		b.x = camPos.x - LAND_SIZE/2 - 50;
+		b.y = camPos.z - LAND_SIZE/2 - 50;
+		b.size = LAND_SIZE + 200; 
+
+		if(!G_BoundCheckSquares(a,b))
+		{
+			//then this object does not reside in the acceptable render square, place him somewhere randomly
+			//around the sky box
+			MoveToOuterSkybox(it->retSelf());
+		}
+
+	}
+
+	for(vector<Model>::iterator it = trees.begin(); it != trees.end(); ++it) 
+	{
+		square2D a;
+		a.x = it->location.x;
+		a.y = it->location.z;
+		a.size = 1;
+
+		square2D b; //acceptable render square
+		b.x = camPos.x - LAND_SIZE/2 - 50;
+		b.y = camPos.z - LAND_SIZE/2 - 50;
+		b.size = LAND_SIZE + 200; 
+
+		if(!G_BoundCheckSquares(a,b))
+		{
+			//then this object does not reside in the acceptable render square, place him somewhere randomly
+			//around the sky box
+			MoveToOuterSkybox(it->retSelf());
+		}
+	}
+
+	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) {	  
+		square2D a;
+		a.x = it->location.x;
+		a.y = it->location.z;
+		a.size = 1;
+
+		square2D b; //acceptable render square
+		b.x = camPos.x - LAND_SIZE/2 - 50;
+		b.y = camPos.z - LAND_SIZE/2 - 50;
+		b.size = LAND_SIZE + 200; 
+
+		if(!G_BoundCheckSquares(a,b))
+		{
+			//then this object does not reside in the acceptable render square, place him somewhere randomly
+			//around the sky box
+			MoveToOuterSkybox(it->retSelf());
+		} 
+	}
+
+
+
+
+}
 
 void static loadTexture(GLuint texture_obj, const char *tFileName) {
 SDL_Surface *g_image_surface = NULL;
@@ -425,9 +573,9 @@ void init()
 {
 	glutSetCursor(GLUT_CURSOR_NONE);
 		//Cam
-	camPos.x = GAME_MAP_BOUND_W /2;
+	camPos.x = (GAME_MAP_BOUND_W + GAME_MAP_BOUND_W_LB) / 2;
 	camPos.y = 15;
-	camPos.z = GAME_MAP_BOUND_W /2;
+	camPos.z = (GAME_MAP_BOUND_W + GAME_MAP_BOUND_W_LB) / 2;
 	std::cout << "Loading";
 	
 	//camLA.x = 5;
@@ -502,8 +650,8 @@ void loadModels(){
 	//Load Rabbits
 	std::cout << endl << "Loading Rabbits";
 	for(int i = 0; i < MaxRabbit; i++){
-		int x = 50;
-		int z = 20;
+		int x = camPos.x;
+		int z = camPos.z;
 		
 		//int x = rand() % 200;
 		//int z = rand() % 200;
@@ -518,8 +666,8 @@ void loadModels(){
 	std::cout << endl << "Loading Shrubbery";	
 		//Load Bushes
 	for(int i = 0; i < MaxBush; i++){
-		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
-		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
 		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
 		std::cout << ".";
@@ -528,11 +676,11 @@ void loadModels(){
 	std::cout << endl << "Loading Trees";	
 		//Load Trees
 	for(int i = 0; i < MaxTree; i++){
-		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
-		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
+		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
 		float size = rand() % 10;
 		Model temp (objects[2], glm::vec4(x, size, z, 1.0), size);	
-		models.push_back(temp);
+		trees.push_back(temp);
 		std::cout << ".";
 	}
 	
@@ -541,9 +689,8 @@ void loadModels(){
 	for(int i = 0; i < MaxCarrot; i++){
 			
 		
-		int x = rand() % 200;
-		int z = rand() % 200;
-
+		int x = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
+		int z = (rand() % (GAME_MAP_BOUND_W - GAME_MAP_BOUND_W_LB)) + GAME_MAP_BOUND_W_LB;
 		//int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
@@ -570,6 +717,9 @@ void drawModels(){
 	  it->Draw();
 
 	for(vector<Bunny>::iterator it = bunnies.begin(); it != bunnies.end(); ++it) 
+	  it->Draw();
+
+	for(vector<Model>::iterator it = trees.begin(); it != trees.end(); ++it) 
 	  it->Draw();
 
 	for(vector<Model>::iterator it = carrots.begin(); it != carrots.end(); ++it) {	  
@@ -728,10 +878,10 @@ void CamMove(bool foward)
 
 	//If cam in bounds from this move, then move
 
-	if(G_BoundCheck(camPos.x + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_H_LB,GAME_MAP_BOUND_W))
+	if(G_BoundCheck(camPos.x + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_W_LB,GAME_MAP_BOUND_W))
 		camPos.x += ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod;	
 
-	if(G_BoundCheck(camPos.z + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_H_LB,GAME_MAP_BOUND_W))
+	if(G_BoundCheck(camPos.z + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_W_LB,GAME_MAP_BOUND_W))
 		camPos.z += ZOOM_SPEED * sin(HAng) * ZOOM_SPEED_FACTOR * mod;
 
 	if(G_BoundCheck(camPos.y + ZOOM_SPEED * cos(VAng) * ZOOM_SPEED_FACTOR * mod,1,GAME_MAP_BOUND_H))
@@ -745,10 +895,10 @@ void CamMove(bool foward)
 	if(camPos.y > GAME_MAP_BOUND_H)
 		camPos.y = GAME_MAP_BOUND_H - 2; 
 
-	if(camPos.x < GAME_MAP_BOUND_H_LB)
-		camPos.x = GAME_MAP_BOUND_H_LB;
-	if(camPos.z < GAME_MAP_BOUND_H_LB)
-		camPos.z = GAME_MAP_BOUND_H_LB;
+	if(camPos.x < GAME_MAP_BOUND_W_LB)
+		camPos.x = GAME_MAP_BOUND_W_LB;
+	if(camPos.z < GAME_MAP_BOUND_W_LB)
+		camPos.z = GAME_MAP_BOUND_W_LB;
 	if(camPos.y < 0)
 		camPos.y = 3; 
 	
@@ -827,6 +977,9 @@ void ColiTester()
 	
 	if(!bunnies.empty() && !carrots.empty())
 	for(vector<Bunny>::iterator bid = bunnies.begin();bid != bunnies.end();++bid)
+	{
+
+
 	for(vector<Model>::iterator cid = carrots.begin();cid != carrots.end();++cid){
 		square2D a;
 		a.x = bid->location.x - BUNNY_HEIGHT/2;
@@ -845,6 +998,29 @@ void ColiTester()
 			bid->EatCarrot();				
 		}
 	
+	}
+
+
+	for(vector<Model>::iterator tit = trees.begin();tit != trees.end();++tit){
+		square2D a;
+		a.x = bid->location.x - BUNNY_HEIGHT/2;
+		a.y = bid->location.z - BUNNY_HEIGHT/2;
+		a.size = BUNNY_HEIGHT;
+				
+		square2D b;
+		b.x = tit->location.x - 2;
+		b.y = tit->location.z - 2;
+		b.size = 2;
+
+		if(G_BoundCheckSquares(a,b))
+		{
+			//Bunny has collided with the tree
+			std::cout << "Collided with tree" << std::endl;	
+		}
+	
+	}
+
+
 	}
 }
 
