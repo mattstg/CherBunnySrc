@@ -293,17 +293,51 @@ void updateMouse(int x, int y)
 
 void drawLights()
 {
-	
-    
-	//Add point source light
-	//GLfloat light_Pos[4] = {5.0, 5.0, -10.0, 1.0};   // Positioned at (5.0, 5.0, -10.0)
-	//GLfloat light_Ka[4] = {0.5, 0.5, 0.5, 1.0};    // ambient light parameters
-	//GLfloat light_Kd[4] = {0.8, 0.8, 0.8, 1.0}; // diffuse light parameters
-	//GLfloat light_Ks[4] = {0.9, 0.2, 0.9, 1.0};    //specular light parameters
-	//glLightfv(GL_LIGHT0, GL_POSITION, light_Pos);
- //   glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
+glPushMatrix();
+	//glTranslatef(camPos.x, LAND_SIZE, camPos.z);
+	glEnable(GL_LIGHT0);
+	GLfloat light_Pos0[4] = {-LAND_SIZE/2+camPos.x,LAND_SIZE, -LAND_SIZE/2+camPos.z, 1.0};   // Positioned at (5.0, 5.0, -10.0)
+	GLfloat light_Ka0[4] = {0.8f, 0.8f, 0.8f, 1.0};    // ambient light parameters
+	GLfloat light_Kd0[4] = {0.8f, 0.8f, 0.8f, 1.0}; // diffuse light parameters
+	GLfloat light_Ks0[4] = {0.2f, 0.8f, 0.2f, 1.0};    //specular light parameters
+	glLightfv(GL_LIGHT0, GL_POSITION, light_Pos0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks0);
+glPopMatrix();
+glPushMatrix();
+	glEnable(GL_LIGHT1);
+	GLfloat light_Pos1[4] = {LAND_SIZE/2+camPos.x,LAND_SIZE, -LAND_SIZE/2+camPos.z, 1.0};   // Positioned at (5.0, 5.0, -10.0)
+	GLfloat light_Ka1[4] = {0.8f, 0.8f, 0.8f, 1.0};    // ambient light parameters
+	GLfloat light_Kd1[4] = {0.8f, 0.8f, 0.8f, 1.0}; // diffuse light parameters
+	GLfloat light_Ks1[4] = {0.2f, 0.8f, 0.2f, 1.0};    //specular light parameters
+	glLightfv(GL_LIGHT1, GL_POSITION, light_Pos1);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light_Ka1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_Kd1);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_Ks1);
+glPopMatrix();
+glPushMatrix();
+	glEnable(GL_LIGHT2);
+	GLfloat light_Pos2[4] = {LAND_SIZE/2+camPos.x,LAND_SIZE, LAND_SIZE/2+camPos.z, 1.0};   // Positioned at (5.0, 5.0, -10.0)
+	GLfloat light_Ka2[4] = {0.8f, 0.8f, 0.8f, 1.0};    // ambient light parameters
+	GLfloat light_Kd2[4] = {0.8f, 0.8f, 0.8f, 1.0}; // diffuse light parameters
+	GLfloat light_Ks2[4] = {0.2f, 0.8f, 0.2f, 1.0};    //specular light parameters
+	glLightfv(GL_LIGHT2, GL_POSITION, light_Pos2);
+    glLightfv(GL_LIGHT2, GL_AMBIENT, light_Ka2);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, light_Kd2);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, light_Ks2);
+glPopMatrix();
+glPushMatrix();
+	glEnable(GL_LIGHT3);
+	GLfloat light_Pos3[4] = {-LAND_SIZE/2+camPos.x,LAND_SIZE, LAND_SIZE/2+camPos.z, 1.0};   // Positioned at (5.0, 5.0, -10.0)
+	GLfloat light_Ka3[4] = {0.8f, 0.8f, 0.8f, 1.0};    // ambient light parameters
+	GLfloat light_Kd3[4] = {0.8f, 0.8f, 0.8f, 1.0}; // diffuse light parameters
+	GLfloat light_Ks3[4] = {0.2f, 0.8f, 0.2f, 1.0};    //specular light parameters
+	glLightfv(GL_LIGHT3, GL_POSITION, light_Pos3);
+    glLightfv(GL_LIGHT3, GL_AMBIENT, light_Ka3);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, light_Kd3);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, light_Ks3);	
+glPopMatrix();
 }
 
 
@@ -462,6 +496,8 @@ void init()
 	//glFogf(GL_FOG_END, 40.0 );
 
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHTING);
 	//loadTexture(texture,"Texture.jpg");
 	initSkybox();
 	
@@ -676,15 +712,29 @@ void keyboard(unsigned char key, int x, int y)
 		ZOOM_SPEED_FACTOR -= .5f;
 		if(ZOOM_SPEED_FACTOR < .5f)
 			ZOOM_SPEED_FACTOR = .5f;
-		break;
-
-	case 'l':		
-		if(lightOn)
-			glDisable(GL_LIGHT0);
-		else
-			glEnable(GL_LIGHT0);
+		break;		
+	case 'l':
+		
+		if(lightOn){
+		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
+		glDisable(GL_LIGHT2);
+		glDisable(GL_LIGHT3);
 
 		lightOn = !lightOn;
+		}
+		else{
+		lightOn = !lightOn;
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT2);
+		glEnable(GL_LIGHT3);
+		}
+		
+		glutPostRedisplay();
+		break;
 
 		break;
 
