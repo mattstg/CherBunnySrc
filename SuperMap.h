@@ -13,7 +13,7 @@ class SuperMap{
 	struct Floors{ FloorMap* fmap; int x; int y; bool active; };
 
 public:
-	Floors * map[9];
+	Floors * map[16];
 
 	SuperMap();
 

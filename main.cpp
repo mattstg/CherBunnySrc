@@ -69,14 +69,14 @@ vector<Model> carrots;
 //fireworks 
 vector<Firework> fireworks; 
 
-int MaxRabbit = 10;
-int MaxTree = 2;
-int MaxBush = 2;
-int MaxCarrot = 60;
+int MaxRabbit = 1;
+int MaxTree = 0;
+int MaxBush = 0;
+int MaxCarrot = 1;
 
 
 //Floor map
-SuperMap Map;
+//SuperMap Map;
 FloorMap TestMap;
 
 
@@ -424,10 +424,10 @@ void init()
 {
 	glutSetCursor(GLUT_CURSOR_NONE);
 		//Cam
-	camPos.x = -44.547;
-	camPos.y = 5.24364;
-	camPos.z = 26.7551;
-
+	camPos.x = GAME_MAP_BOUND_W /2;
+	camPos.y = 15;
+	camPos.z = GAME_MAP_BOUND_W /2;
+	std::cout << "Loading";
 	
 	//camLA.x = 5;
 	//camLA.y = 5;
@@ -445,13 +445,14 @@ void init()
 	//GLfloat light_position[] = { LAND_SIZE/2, LAND_SIZE/2, LAND_SIZE/2, 0.0 };
 	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	TestMap.LoadTexture();
-
+	std::cout << ".";
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT0);
 	 
 	//glEnable(GL_COLOR_MATERIAL); //allow material to be effected by lighting
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
+	std::cout << ".";
 
 	//glEnable(GL_FOG);
 	//GLfloat fogColor[4] = {.9, 0.9, 0.9, 1.0};
@@ -463,7 +464,9 @@ void init()
 	glEnable(GL_TEXTURE_2D);
 	//loadTexture(texture,"Texture.jpg");
 	initSkybox();
+	
 	loadModels();
+	std::cout << ".";
 
 	printInstructions();
 	glutTimerFunc(50, &Update, 0); //first time calls after some gap in time in order to allow some render time
@@ -494,6 +497,7 @@ void loadModels(){
 	objects[3] = "CherBunnySrc/objs/carrot.obj";
 
 	//Load Rabbits
+	std::cout << endl << "Loading Rabbits";
 	for(int i = 0; i < MaxRabbit; i++){
 		int x = 50;
 		int z = 20;
@@ -505,16 +509,20 @@ void loadModels(){
 		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Bunny temp (objects[0], glm::vec4(x, 0.95f, z, 1.0),1.0);	
 		bunnies.push_back(temp);
+		std::cout << ".";
 	}
 
+	std::cout << endl << "Loading Shrubbery";	
 		//Load Bushes
 	for(int i = 0; i < MaxBush; i++){
 		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[1], glm::vec4(x, 0.95f, z, 1.0));	
 		models.push_back(temp);
+		std::cout << ".";
 	}
 	
+	std::cout << endl << "Loading Trees";	
 		//Load Trees
 	for(int i = 0; i < MaxTree; i++){
 		int x = (rand() % LAND_SIZE) - LAND_SIZE/2;
@@ -522,8 +530,10 @@ void loadModels(){
 		float size = rand() % 10;
 		Model temp (objects[2], glm::vec4(x, size, z, 1.0), size);	
 		models.push_back(temp);
+		std::cout << ".";
 	}
-
+	
+	std::cout << endl << "Loading Carrots";
 		//Load Carrots
 	for(int i = 0; i < MaxCarrot; i++){
 			
@@ -535,7 +545,9 @@ void loadModels(){
 		//int z = (rand() % LAND_SIZE) - LAND_SIZE/2;
 		Model temp (objects[3], glm::vec4(x, 0.95f, z, 1.0));	
 		carrots.push_back(temp);
+		std::cout << ".";
 	}
+	
 }
 void setReductionColorValue(){
 	if(colorR>=0.9f && colorB>=0.13f){
@@ -600,8 +612,8 @@ void display()
 
 void drawFloorMap()
 {
-	Map.Draw(camPos.x,camPos.y);
-	//TestMap.Draw();
+	//Map.Draw(camPos.x,camPos.y);
+	TestMap.Draw();
 }
 
 void reshape(int w, int h)
@@ -696,9 +708,35 @@ void CamMove(bool foward)
 	int mod = 1;
 	if(!foward)
 		mod = -1;
-	camPos.x += ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod;
-	camPos.z += ZOOM_SPEED * sin(HAng) * ZOOM_SPEED_FACTOR * mod;
-	camPos.y += ZOOM_SPEED * sin(VAng) * ZOOM_SPEED_FACTOR * mod;
+
+	//If cam in bounds from this move, then move
+
+	if(G_BoundCheck(camPos.x + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_H_LB,GAME_MAP_BOUND_W))
+		camPos.x += ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod;	
+
+	if(G_BoundCheck(camPos.z + ZOOM_SPEED * cos(HAng) * ZOOM_SPEED_FACTOR * mod,GAME_MAP_BOUND_H_LB,GAME_MAP_BOUND_W))
+		camPos.z += ZOOM_SPEED * sin(HAng) * ZOOM_SPEED_FACTOR * mod;
+
+	if(G_BoundCheck(camPos.y + ZOOM_SPEED * cos(VAng) * ZOOM_SPEED_FACTOR * mod,1,GAME_MAP_BOUND_H))
+		camPos.y += ZOOM_SPEED * sin(VAng) * ZOOM_SPEED_FACTOR * mod;
+
+
+	if(camPos.x > GAME_MAP_BOUND_W)
+		camPos.x = GAME_MAP_BOUND_W -2;
+	if(camPos.z > GAME_MAP_BOUND_W)
+		camPos.z = GAME_MAP_BOUND_W - 2;
+	if(camPos.y > GAME_MAP_BOUND_H)
+		camPos.y = GAME_MAP_BOUND_H - 2; 
+
+	if(camPos.x < GAME_MAP_BOUND_H_LB)
+		camPos.x = GAME_MAP_BOUND_H_LB;
+	if(camPos.z < GAME_MAP_BOUND_H_LB)
+		camPos.z = GAME_MAP_BOUND_H_LB;
+	if(camPos.y < 0)
+		camPos.y = 3; 
+	
+	
+	std::cout << "cur pos xz y: " << (int)camPos.x << " , " << (int)camPos.z << " , " << (int)camPos.y << endl;
 
 }
 

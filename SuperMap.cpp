@@ -6,11 +6,11 @@
 SuperMap::SuperMap()
 {
 	
-	for(int i = 0; i < 9; i++)
+	for(int i = 0; i < 16; i++)
 	{
 		map[i] = new Floors;
-		map[i]->x = (i % 3) - 1;
-		map[i]->y = (i / 3) - 1;
+		map[i]->x = (i % 4) - 2;
+		map[i]->y = (i / 4) - 2;
 		map[i]->active = true;
 		map[i]->fmap = new FloorMap(map[i]->x,map[i]->y);
 		map[i]->fmap->LoadTexture();
@@ -28,7 +28,7 @@ void SuperMap::Draw(float x, float y){
 	SetActives(x,y);
 	
 	//19 & 50, hardcode cause c++ not lettimg me make global .h constants
-	for(int i = 0; i < 9; i++)
+	for(int i = 0; i < 16; i++)
 		if(map[i]->active)
 			map[i]->fmap->Draw();
 
@@ -40,7 +40,7 @@ void SuperMap::SetActives(float x, float y)
 	//Find out which maps are within the bounds
 	//Check all 4 corners of the box, and see if any of the 4 corners reside in the box
 
-	for(int i = 0; i < 9; i++)
+	for(int i = 0; i < 16; i++)
 	{
 		square2D a;
 		a.x = x - LAND_SIZE/2;  //plus or minus, well find out

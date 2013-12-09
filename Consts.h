@@ -9,8 +9,12 @@
 	struct Vect3{
 	float x; float y; float z;
 	};
+
+
 	
-	const int FLOOR_GRID_ROWS = 19;
+
+	
+	const int FLOOR_GRID_ROWS = 120;
 	const int FLOOR_GRID_SIZE = 50; //Tile size
 	const int LAND_SIZE = 900;
 	const float GRAVITY = -1.0f;
@@ -20,6 +24,10 @@
 	const float CARROT_SIZE = 2;
 	const float CARROT_FOOD_AMT = 125;
 	const float PI = PI; //some ppl cant reach maths pi for some reason
+
+	const int GAME_MAP_BOUND_H_LB = 500;
+	const int GAME_MAP_BOUND_W = 3*LAND_SIZE;
+	const int GAME_MAP_BOUND_H = LAND_SIZE/4;
 
 	enum MousePressed{ LEFT,RIGHT,NONE};
 	enum BunnyStates{ HOPPING, GROUND, ROCKET, EXPLODE};
@@ -61,6 +69,8 @@ void static IntzRand()
 	srand(time(0));
 
 }
+
+
 	
 int static getRand()
 	{		
