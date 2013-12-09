@@ -51,7 +51,8 @@ void FloorMap::Draw()
 		glPushMatrix();
 		glTranslatef(floorMap[i].x*FLOOR_GRID_SIZE, 0.0, floorMap[i].z*FLOOR_GRID_SIZE);	
 				
-		glBegin(GL_QUADS);						
+		glBegin(GL_QUADS);
+		glNormal3f(0,1,0);
 		glTexCoord2f(0,0); glVertex3f(0,0,0);
 		glTexCoord2f(0,1); glVertex3f(0,0,-FLOOR_GRID_SIZE);
 		glTexCoord2f(1,1); glVertex3f(-FLOOR_GRID_SIZE,0,-FLOOR_GRID_SIZE);
